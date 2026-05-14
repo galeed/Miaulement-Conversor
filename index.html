@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -8,891 +7,890 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap');
 
-:root {
-–neon-cyan: #00f5ff;
-–neon-pink: #ff00aa;
-–neon-green: #00ff88;
-–neon-yellow: #ffee00;
-–neon-purple: #bf00ff;
-–bg-dark: #020408;
-–bg-card: #050d14;
-–bg-panel: #080f1a;
-–border-glow: rgba(0,245,255,0.3);
-–text-main: #c8eeff;
-–text-dim: #4a7a8a;
-}
-
-- { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-background: var(–bg-dark);
-color: var(–text-main);
-font-family: ‘Exo 2’, sans-serif;
-min-height: 100vh;
-overflow-x: hidden;
-position: relative;
-}
-
-/* Animated grid background */
-body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background-image:
-linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
-linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
-background-size: 40px 40px;
-pointer-events: none;
-z-index: 0;
-animation: gridPulse 8s ease-in-out infinite;
-}
-
-body::after {
-content: ‘’;
-position: fixed;
-inset: 0;
-background: radial-gradient(ellipse at 20% 50%, rgba(0,245,255,0.04) 0%, transparent 60%),
-radial-gradient(ellipse at 80% 20%, rgba(255,0,170,0.04) 0%, transparent 60%),
-radial-gradient(ellipse at 60% 80%, rgba(0,255,136,0.03) 0%, transparent 50%);
-pointer-events: none;
-z-index: 0;
-}
-
-@keyframes gridPulse {
-0%, 100% { opacity: 0.5; }
-50% { opacity: 1; }
-}
-
-.container {
-position: relative;
-z-index: 1;
-max-width: 900px;
-margin: 0 auto;
-padding: 20px;
-}
-
-/* HEADER */
-header {
-text-align: center;
-padding: 40px 0 30px;
-position: relative;
-}
-
-.logo-cat {
-font-size: 48px;
-display: block;
-margin-bottom: 4px;
-filter: drop-shadow(0 0 20px var(–neon-cyan));
-animation: catFloat 3s ease-in-out infinite;
-}
-
-@keyframes catFloat {
-0%, 100% { transform: translateY(0) rotate(-2deg); }
-50% { transform: translateY(-8px) rotate(2deg); }
-}
-
-h1 {
-font-family: ‘Orbitron’, sans-serif;
-font-weight: 900;
-font-size: clamp(24px, 5vw, 42px);
-letter-spacing: 3px;
-background: linear-gradient(90deg, var(–neon-cyan), var(–neon-pink), var(–neon-cyan));
-background-size: 200% auto;
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-animation: shimmer 4s linear infinite;
-text-shadow: none;
-}
-
-@keyframes shimmer {
-0% { background-position: 0% center; }
-100% { background-position: 200% center; }
-}
-
-.tagline {
-font-family: ‘Share Tech Mono’, monospace;
-color: var(–neon-green);
-font-size: 12px;
-letter-spacing: 4px;
-margin-top: 6px;
-text-shadow: 0 0 10px var(–neon-green);
-opacity: 0.8;
-}
-
-.header-line {
-width: 100%;
-height: 1px;
-background: linear-gradient(90deg, transparent, var(–neon-cyan), var(–neon-pink), transparent);
-margin-top: 24px;
-position: relative;
-}
-
-.header-line::after {
-content: ‘◆’;
-position: absolute;
-left: 50%;
-top: 50%;
-transform: translate(-50%, -50%);
-color: var(–neon-cyan);
-font-size: 10px;
-text-shadow: 0 0 10px var(–neon-cyan);
-background: var(–bg-dark);
-padding: 0 8px;
-}
-
-/* MAIN CARD */
-.main-card {
-background: var(–bg-card);
-border: 1px solid var(–border-glow);
-border-radius: 4px;
-padding: 32px;
-position: relative;
-margin-bottom: 20px;
-box-shadow:
-0 0 30px rgba(0,245,255,0.05),
-inset 0 0 30px rgba(0,0,0,0.5);
-}
-
-.main-card::before {
-content: ‘’;
-position: absolute;
-top: -1px; left: 20px; right: 20px; height: 2px;
-background: linear-gradient(90deg, transparent, var(–neon-cyan), transparent);
-border-radius: 2px;
-}
-
-.corner-tag {
-position: absolute;
-top: 8px; right: 12px;
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 9px;
-color: var(–text-dim);
-letter-spacing: 2px;
-}
-
-/* DROP ZONE */
-.drop-zone {
-border: 2px dashed rgba(0,245,255,0.25);
-border-radius: 4px;
-padding: 48px 32px;
-text-align: center;
-cursor: pointer;
-transition: all 0.3s ease;
-position: relative;
-background: rgba(0,245,255,0.02);
-overflow: hidden;
-}
-
-.drop-zone::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, transparent 50%, rgba(255,0,170,0.05) 100%);
-opacity: 0;
-transition: opacity 0.3s;
-}
-
-.drop-zone:hover::before,
-.drop-zone.dragging::before { opacity: 1; }
-
-.drop-zone:hover,
-.drop-zone.dragging {
-border-color: var(–neon-cyan);
-box-shadow: 0 0 20px rgba(0,245,255,0.15), inset 0 0 20px rgba(0,245,255,0.05);
-}
-
-.drop-icon {
-font-size: 48px;
-margin-bottom: 12px;
-display: block;
-filter: drop-shadow(0 0 12px var(–neon-cyan));
-transition: transform 0.3s;
-}
-
-.drop-zone:hover .drop-icon { transform: scale(1.1); }
-
-.drop-title {
-font-family: ‘Orbitron’, sans-serif;
-font-size: 15px;
-color: var(–neon-cyan);
-letter-spacing: 2px;
-text-shadow: 0 0 10px rgba(0,245,255,0.5);
-margin-bottom: 6px;
-}
-
-.drop-sub {
-font-size: 12px;
-color: var(–text-dim);
-font-family: ‘Share Tech Mono’, monospace;
-letter-spacing: 1px;
-}
-
-.drop-formats {
-margin-top: 14px;
-display: flex;
-gap: 8px;
-justify-content: center;
-flex-wrap: wrap;
-}
-
-.fmt-badge {
-padding: 3px 10px;
-border: 1px solid rgba(0,255,136,0.3);
-border-radius: 2px;
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 10px;
-color: var(–neon-green);
-letter-spacing: 1px;
-text-shadow: 0 0 6px rgba(0,255,136,0.4);
-}
-
-#fileInput { display: none; }
-
-/* FILE INFO */
-.file-info {
-display: none;
-background: rgba(0,245,255,0.05);
-border: 1px solid rgba(0,245,255,0.2);
-border-radius: 4px;
-padding: 16px 20px;
-margin-top: 20px;
-align-items: center;
-gap: 16px;
-}
-
-.file-info.visible { display: flex; }
-
-.file-icon { font-size: 28px; }
-
-.file-details { flex: 1; }
-
-.file-name {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 13px;
-color: var(–neon-cyan);
-word-break: break-all;
-}
-
-.file-meta {
-font-size: 11px;
-color: var(–text-dim);
-margin-top: 2px;
-font-family: ‘Share Tech Mono’, monospace;
-}
-
-.btn-clear {
-background: none;
-border: 1px solid rgba(255,0,170,0.4);
-color: var(–neon-pink);
-padding: 6px 14px;
-border-radius: 2px;
-cursor: pointer;
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 11px;
-letter-spacing: 1px;
-transition: all 0.2s;
-white-space: nowrap;
-}
-
-.btn-clear:hover {
-background: rgba(255,0,170,0.1);
-box-shadow: 0 0 10px rgba(255,0,170,0.3);
-}
-
-/* SETTINGS PANEL */
-.settings-panel {
-margin-top: 24px;
-}
-
-.section-label {
-font-family: ‘Orbitron’, sans-serif;
-font-size: 10px;
-letter-spacing: 3px;
-color: var(–neon-pink);
-text-shadow: 0 0 8px rgba(255,0,170,0.5);
-margin-bottom: 16px;
-display: flex;
-align-items: center;
-gap: 10px;
-}
-
-.section-label::after {
-content: ‘’;
-flex: 1;
-height: 1px;
-background: linear-gradient(90deg, rgba(255,0,170,0.3), transparent);
-}
-
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-
-@media (max-width: 600px) {
-.grid-2, .grid-3 { grid-template-columns: 1fr 1fr; }
-.main-card { padding: 20px 16px; }
-}
-
-/* FIELD */
-.field { display: flex; flex-direction: column; gap: 6px; }
-
-label {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 10px;
-letter-spacing: 2px;
-color: var(–text-dim);
-text-transform: uppercase;
-}
-
-select, input[type=“range”] {
-width: 100%;
-background: var(–bg-panel);
-border: 1px solid rgba(0,245,255,0.2);
-border-radius: 2px;
-color: var(–text-main);
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 13px;
-padding: 8px 12px;
-appearance: none;
--webkit-appearance: none;
-outline: none;
-transition: all 0.2s;
-cursor: pointer;
-}
-
-select {
-background-image: url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘10’ height=‘6’%3E%3Cpath d=‘M0 0l5 6 5-6z’ fill=’%2300f5ff’/%3E%3C/svg%3E”);
-background-repeat: no-repeat;
-background-position: right 12px center;
-padding-right: 32px;
-}
-
-select:focus, select:hover {
-border-color: var(–neon-cyan);
-box-shadow: 0 0 12px rgba(0,245,255,0.15);
-}
-
-select option {
-background: #0a1520;
-color: var(–text-main);
-}
-
-/* FORMAT TABS */
-.format-tabs {
-display: flex;
-gap: 8px;
-flex-wrap: wrap;
-margin-bottom: 20px;
-}
-
-.fmt-tab {
-flex: 1;
-min-width: 70px;
-padding: 10px 8px;
-border: 1px solid rgba(0,245,255,0.2);
-border-radius: 2px;
-background: var(–bg-panel);
-color: var(–text-dim);
-font-family: ‘Orbitron’, sans-serif;
-font-size: 11px;
-letter-spacing: 1px;
-cursor: pointer;
-transition: all 0.2s;
-text-align: center;
-}
-
-.fmt-tab:hover {
-border-color: rgba(0,245,255,0.4);
-color: var(–neon-cyan);
-}
-
-.fmt-tab.active {
-border-color: var(–neon-cyan);
-background: rgba(0,245,255,0.08);
-color: var(–neon-cyan);
-box-shadow: 0 0 12px rgba(0,245,255,0.2), inset 0 0 8px rgba(0,245,255,0.05);
-text-shadow: 0 0 8px var(–neon-cyan);
-}
-
-/* FORMAT OPTIONS */
-.format-opts { display: none; animation: fadeIn 0.3s ease; }
-.format-opts.active { display: block; }
-
-@keyframes fadeIn {
-from { opacity: 0; transform: translateY(6px); }
-to { opacity: 1; transform: translateY(0); }
-}
-
-/* RANGE SLIDER */
-.range-wrapper { position: relative; }
-
-input[type=“range”] {
-padding: 0;
-height: 6px;
-border-radius: 3px;
-background: linear-gradient(90deg, var(–neon-cyan) var(–pct, 0%), rgba(0,245,255,0.1) var(–pct, 0%));
-border: none;
-cursor: pointer;
-}
-
-input[type=“range”]::-webkit-slider-thumb {
-appearance: none;
-width: 18px; height: 18px;
-border-radius: 50%;
-background: var(–bg-dark);
-border: 2px solid var(–neon-cyan);
-box-shadow: 0 0 8px var(–neon-cyan);
-cursor: pointer;
-transition: transform 0.15s;
-}
-
-input[type=“range”]:hover::-webkit-slider-thumb {
-transform: scale(1.2);
-box-shadow: 0 0 16px var(–neon-cyan);
-}
-
-.range-labels {
-display: flex;
-justify-content: space-between;
-margin-top: 4px;
-}
-
-.range-val {
-font-family: ‘Orbitron’, sans-serif;
-font-size: 11px;
-color: var(–neon-cyan);
-text-shadow: 0 0 6px rgba(0,245,255,0.5);
-text-align: right;
-margin-top: 4px;
-}
-
-/* TOGGLE */
-.toggle-row {
-display: flex;
-align-items: center;
-gap: 14px;
-padding: 12px 16px;
-border: 1px solid rgba(0,245,255,0.1);
-border-radius: 4px;
-background: rgba(0,245,255,0.02);
-cursor: pointer;
-transition: all 0.2s;
-}
-
-.toggle-row:hover {
-border-color: rgba(0,245,255,0.3);
-background: rgba(0,245,255,0.05);
-}
-
-.toggle-switch {
-position: relative;
-width: 44px; height: 22px;
-flex-shrink: 0;
-}
-
-.toggle-switch input { opacity: 0; width: 0; height: 0; }
-
-.toggle-track {
-position: absolute;
-inset: 0;
-background: rgba(0,245,255,0.1);
-border: 1px solid rgba(0,245,255,0.3);
-border-radius: 22px;
-transition: all 0.3s;
-cursor: pointer;
-}
-
-.toggle-track::before {
-content: ‘’;
-position: absolute;
-left: 3px; top: 50%; transform: translateY(-50%);
-width: 14px; height: 14px;
-border-radius: 50%;
-background: var(–text-dim);
-transition: all 0.3s;
-}
-
-.toggle-switch input:checked + .toggle-track {
-background: rgba(0,245,255,0.2);
-border-color: var(–neon-cyan);
-box-shadow: 0 0 10px rgba(0,245,255,0.3);
-}
-
-.toggle-switch input:checked + .toggle-track::before {
-left: calc(100% - 17px);
-background: var(–neon-cyan);
-box-shadow: 0 0 6px var(–neon-cyan);
-}
-
-.toggle-info { flex: 1; }
-
-.toggle-title {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 12px;
-color: var(–text-main);
-letter-spacing: 1px;
-}
-
-.toggle-desc {
-font-size: 10px;
-color: var(–text-dim);
-margin-top: 2px;
-font-family: ‘Share Tech Mono’, monospace;
-}
-
-/* DITHER SELECT */
-.dither-opts {
-display: none;
-margin-top: 12px;
-animation: fadeIn 0.3s ease;
-}
-
-.dither-opts.visible { display: block; }
-
-/* COMPRESSION BAR */
-.compression-grid {
-display: grid;
-grid-template-columns: repeat(9, 1fr);
-gap: 4px;
-margin-top: 6px;
-}
-
-.comp-btn {
-aspect-ratio: 1;
-display: flex;
-align-items: center;
-justify-content: center;
-border: 1px solid rgba(0,245,255,0.15);
-border-radius: 2px;
-background: var(–bg-panel);
-color: var(–text-dim);
-font-family: ‘Orbitron’, monospace;
-font-size: 11px;
-cursor: pointer;
-transition: all 0.15s;
-padding: 8px 4px;
-}
-
-.comp-btn:hover {
-border-color: rgba(0,255,136,0.5);
-color: var(–neon-green);
-}
-
-.comp-btn.active {
-background: rgba(0,255,136,0.12);
-border-color: var(–neon-green);
-color: var(–neon-green);
-box-shadow: 0 0 8px rgba(0,255,136,0.2);
-text-shadow: 0 0 6px var(–neon-green);
-}
-
-/* BITRATE SELECTOR */
-.bitrate-grid {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 6px;
-}
-
-.br-btn {
-padding: 9px 4px;
-text-align: center;
-border: 1px solid rgba(255,238,0,0.15);
-border-radius: 2px;
-background: var(–bg-panel);
-color: var(–text-dim);
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 11px;
-cursor: pointer;
-transition: all 0.15s;
-}
-
-.br-btn:hover { border-color: rgba(255,238,0,0.4); color: var(–neon-yellow); }
-
-.br-btn.active {
-background: rgba(255,238,0,0.08);
-border-color: var(–neon-yellow);
-color: var(–neon-yellow);
-box-shadow: 0 0 8px rgba(255,238,0,0.2);
-text-shadow: 0 0 6px var(–neon-yellow);
-}
-
-.br-badge {
-display: block;
-font-size: 8px;
-color: var(–text-dim);
-margin-top: 2px;
-letter-spacing: 0.5px;
-}
-
-/* CONVERT BUTTON */
-.btn-convert {
-width: 100%;
-padding: 18px;
-margin-top: 28px;
-background: transparent;
-border: 2px solid var(–neon-cyan);
-border-radius: 4px;
-color: var(–neon-cyan);
-font-family: ‘Orbitron’, sans-serif;
-font-size: 16px;
-font-weight: 700;
-letter-spacing: 4px;
-cursor: pointer;
-position: relative;
-overflow: hidden;
-transition: all 0.3s;
-text-shadow: 0 0 10px rgba(0,245,255,0.5);
-box-shadow: 0 0 20px rgba(0,245,255,0.1);
-}
-
-.btn-convert::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: linear-gradient(90deg, transparent, rgba(0,245,255,0.08), transparent);
-transform: translateX(-100%);
-transition: transform 0.6s;
-}
-
-.btn-convert:hover::before { transform: translateX(100%); }
-
-.btn-convert:hover {
-background: rgba(0,245,255,0.08);
-box-shadow: 0 0 40px rgba(0,245,255,0.25), inset 0 0 20px rgba(0,245,255,0.05);
-}
-
-.btn-convert:disabled {
-opacity: 0.3;
-cursor: not-allowed;
-border-color: var(–text-dim);
-color: var(–text-dim);
-text-shadow: none;
-box-shadow: none;
-}
-
-.btn-convert:disabled:hover { background: transparent; }
-.btn-convert:disabled::before { display: none; }
-
-/* PROGRESS */
-.progress-area {
-display: none;
-margin-top: 20px;
-}
-
-.progress-area.visible { display: block; }
-
-.progress-label {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 11px;
-color: var(–neon-cyan);
-letter-spacing: 2px;
-margin-bottom: 8px;
-display: flex;
-justify-content: space-between;
-}
-
-.progress-bar {
-height: 6px;
-background: rgba(0,245,255,0.08);
-border-radius: 3px;
-overflow: hidden;
-border: 1px solid rgba(0,245,255,0.1);
-}
-
-.progress-fill {
-height: 100%;
-background: linear-gradient(90deg, var(–neon-cyan), var(–neon-pink));
-border-radius: 3px;
-width: 0%;
-transition: width 0.3s ease;
-box-shadow: 0 0 10px rgba(0,245,255,0.5);
-position: relative;
-}
-
-.progress-fill::after {
-content: ‘’;
-position: absolute;
-right: 0; top: 0; bottom: 0;
-width: 30px;
-background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
-animation: progressShine 1s ease-in-out infinite;
-}
-
-@keyframes progressShine {
-0% { opacity: 0; }
-50% { opacity: 1; }
-100% { opacity: 0; }
-}
-
-.log-area {
-margin-top: 12px;
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 10px;
-color: var(–neon-green);
-letter-spacing: 1px;
-min-height: 16px;
-text-shadow: 0 0 6px rgba(0,255,136,0.4);
-}
-
-/* RESULT */
-.result-area {
-display: none;
-margin-top: 20px;
-padding: 20px;
-border: 1px solid rgba(0,255,136,0.3);
-border-radius: 4px;
-background: rgba(0,255,136,0.04);
-text-align: center;
-animation: fadeIn 0.5s ease;
-}
-
-.result-area.visible { display: block; }
-
-.result-icon { font-size: 36px; margin-bottom: 8px; }
-
-.result-title {
-font-family: ‘Orbitron’, sans-serif;
-font-size: 14px;
-color: var(–neon-green);
-letter-spacing: 2px;
-text-shadow: 0 0 10px var(–neon-green);
-margin-bottom: 14px;
-}
-
-.btn-download {
-display: inline-block;
-padding: 12px 32px;
-background: rgba(0,255,136,0.1);
-border: 1px solid var(–neon-green);
-border-radius: 3px;
-color: var(–neon-green);
-font-family: ‘Orbitron’, sans-serif;
-font-size: 12px;
-letter-spacing: 2px;
-text-decoration: none;
-cursor: pointer;
-transition: all 0.2s;
-text-shadow: 0 0 8px rgba(0,255,136,0.5);
-box-shadow: 0 0 15px rgba(0,255,136,0.1);
-}
-
-.btn-download:hover {
-background: rgba(0,255,136,0.18);
-box-shadow: 0 0 25px rgba(0,255,136,0.25);
-}
-
-/* ERROR */
-.error-msg {
-display: none;
-margin-top: 16px;
-padding: 14px 18px;
-border: 1px solid rgba(255,0,170,0.4);
-border-radius: 3px;
-background: rgba(255,0,170,0.05);
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 12px;
-color: var(–neon-pink);
-text-shadow: 0 0 8px rgba(255,0,170,0.4);
-}
-
-.error-msg.visible { display: block; }
-
-/* FOOTER */
-footer {
-text-align: center;
-padding: 24px 0;
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 10px;
-color: var(–text-dim);
-letter-spacing: 2px;
-border-top: 1px solid rgba(0,245,255,0.05);
-margin-top: 10px;
-}
-
-footer span { color: var(–neon-pink); }
-
-/* Scan line effect */
-.scanlines {
-position: fixed;
-inset: 0;
-background: repeating-linear-gradient(
-0deg,
-transparent,
-transparent 2px,
-rgba(0,0,0,0.03) 2px,
-rgba(0,0,0,0.03) 4px
-);
-pointer-events: none;
-z-index: 999;
-}
-
-/* Flicker animation */
-@keyframes flicker {
-0%, 96%, 100% { opacity: 1; }
-97% { opacity: 0.95; }
-98% { opacity: 1; }
-99% { opacity: 0.97; }
-}
-
-.main-card { animation: flicker 12s infinite; }
-
-/* Loading ffmpeg */
-.ffmpeg-status {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 10px;
-color: var(–text-dim);
-letter-spacing: 2px;
-text-align: center;
-padding: 8px;
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 8px;
-}
-
-.dot-pulse {
-display: inline-flex;
-gap: 4px;
-}
-
-.dot-pulse span {
-width: 4px; height: 4px;
-border-radius: 50%;
-background: var(–neon-cyan);
-animation: pulse 1.2s ease-in-out infinite;
-}
-
-.dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
-.dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes pulse {
-0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-40% { transform: scale(1); opacity: 1; }
-}
-
-.ffmpeg-ready { color: var(–neon-green); text-shadow: 0 0 6px rgba(0,255,136,0.4); }
-.ffmpeg-error { color: var(–neon-pink); }
-
-/* Glitch text effect on title */
-@keyframes glitch {
-0%, 100% { clip-path: none; transform: none; }
-92% { clip-path: none; transform: none; }
-93% { clip-path: inset(10% 0 80% 0); transform: translate(-3px, 0); }
-94% { clip-path: inset(60% 0 20% 0); transform: translate(3px, 0); }
-95% { clip-path: none; transform: none; }
-}
-
-h1 { animation: shimmer 4s linear infinite, glitch 15s ease-in-out infinite; }
-
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(–bg-dark); }
-::-webkit-scrollbar-thumb { background: rgba(0,245,255,0.3); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0,245,255,0.5); }
-
-.ogg-quality { display: none; }
-.ogg-quality.show { display: block; }
+  :root {
+    --neon-cyan: #00f5ff;
+    --neon-pink: #ff00aa;
+    --neon-green: #00ff88;
+    --neon-yellow: #ffee00;
+    --neon-purple: #bf00ff;
+    --bg-dark: #020408;
+    --bg-card: #050d14;
+    --bg-panel: #080f1a;
+    --border-glow: rgba(0,245,255,0.3);
+    --text-main: #c8eeff;
+    --text-dim: #4a7a8a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Exo 2', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+    animation: gridPulse 8s ease-in-out infinite;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(0,245,255,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(255,0,170,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 60% 80%, rgba(0,255,136,0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes gridPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 40px 0 30px;
+    position: relative;
+  }
+
+  .logo-cat {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 0 20px var(--neon-cyan));
+    animation: catFloat 3s ease-in-out infinite;
+  }
+
+  @keyframes catFloat {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+  }
+
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(24px, 5vw, 42px);
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-cyan));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+    text-shadow: none;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  .tagline {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--neon-green);
+    font-size: 12px;
+    letter-spacing: 4px;
+    margin-top: 6px;
+    text-shadow: 0 0 10px var(--neon-green);
+    opacity: 0.8;
+  }
+
+  .header-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-pink), transparent);
+    margin-top: 24px;
+    position: relative;
+  }
+
+  .header-line::after {
+    content: '◆';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--neon-cyan);
+    font-size: 10px;
+    text-shadow: 0 0 10px var(--neon-cyan);
+    background: var(--bg-dark);
+    padding: 0 8px;
+  }
+
+  /* MAIN CARD */
+  .main-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 4px;
+    padding: 32px;
+    position: relative;
+    margin-bottom: 20px;
+    box-shadow:
+      0 0 30px rgba(0,245,255,0.05),
+      inset 0 0 30px rgba(0,0,0,0.5);
+  }
+
+  .main-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 20px; right: 20px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+    border-radius: 2px;
+  }
+
+  .corner-tag {
+    position: absolute;
+    top: 8px; right: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+  }
+
+  /* DROP ZONE */
+  .drop-zone {
+    border: 2px dashed rgba(0,245,255,0.25);
+    border-radius: 4px;
+    padding: 48px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: rgba(0,245,255,0.02);
+    overflow: hidden;
+  }
+
+  .drop-zone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, transparent 50%, rgba(255,0,170,0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .drop-zone:hover::before,
+  .drop-zone.dragging::before { opacity: 1; }
+
+  .drop-zone:hover,
+  .drop-zone.dragging {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0,245,255,0.15), inset 0 0 20px rgba(0,245,255,0.05);
+  }
+
+  .drop-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    display: block;
+    filter: drop-shadow(0 0 12px var(--neon-cyan));
+    transition: transform 0.3s;
+  }
+
+  .drop-zone:hover .drop-icon { transform: scale(1.1); }
+
+  .drop-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px;
+    color: var(--neon-cyan);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0,245,255,0.5);
+    margin-bottom: 6px;
+  }
+
+  .drop-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  .drop-formats {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .fmt-badge {
+    padding: 3px 10px;
+    border: 1px solid rgba(0,255,136,0.3);
+    border-radius: 2px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--neon-green);
+    letter-spacing: 1px;
+    text-shadow: 0 0 6px rgba(0,255,136,0.4);
+  }
+
+  #fileInput { display: none; }
+
+  /* FILE INFO */
+  .file-info {
+    display: none;
+    background: rgba(0,245,255,0.05);
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin-top: 20px;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .file-info.visible { display: flex; }
+
+  .file-icon { font-size: 28px; }
+
+  .file-details { flex: 1; }
+
+  .file-name {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--neon-cyan);
+    word-break: break-all;
+  }
+
+  .file-meta {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .btn-clear {
+    background: none;
+    border: 1px solid rgba(255,0,170,0.4);
+    color: var(--neon-pink);
+    padding: 6px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-clear:hover {
+    background: rgba(255,0,170,0.1);
+    box-shadow: 0 0 10px rgba(255,0,170,0.3);
+  }
+
+  /* SETTINGS PANEL */
+  .settings-panel {
+    margin-top: 24px;
+  }
+
+  .section-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--neon-pink);
+    text-shadow: 0 0 8px rgba(255,0,170,0.5);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,0,170,0.3), transparent);
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+  @media (max-width: 600px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr 1fr; }
+    .main-card { padding: 20px 16px; }
+  }
+
+  /* FIELD */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  select, input[type="range"] {
+    width: 100%;
+    background: var(--bg-panel);
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 2px;
+    color: var(--text-main);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    padding: 8px 12px;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300f5ff'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  select:focus, select:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 12px rgba(0,245,255,0.15);
+  }
+
+  select option {
+    background: #0a1520;
+    color: var(--text-main);
+  }
+
+  /* FORMAT TABS */
+  .format-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .fmt-tab {
+    flex: 1;
+    min-width: 70px;
+    padding: 10px 8px;
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 2px;
+    background: var(--bg-panel);
+    color: var(--text-dim);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .fmt-tab:hover {
+    border-color: rgba(0,245,255,0.4);
+    color: var(--neon-cyan);
+  }
+
+  .fmt-tab.active {
+    border-color: var(--neon-cyan);
+    background: rgba(0,245,255,0.08);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 12px rgba(0,245,255,0.2), inset 0 0 8px rgba(0,245,255,0.05);
+    text-shadow: 0 0 8px var(--neon-cyan);
+  }
+
+  /* FORMAT OPTIONS */
+  .format-opts { display: none; animation: fadeIn 0.3s ease; }
+  .format-opts.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RANGE SLIDER */
+  .range-wrapper { position: relative; }
+
+  input[type="range"] {
+    padding: 0;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--neon-cyan) var(--pct, 0%), rgba(0,245,255,0.1) var(--pct, 0%));
+    border: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 8px var(--neon-cyan);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  input[type="range"]:hover::-webkit-slider-thumb {
+    transform: scale(1.2);
+    box-shadow: 0 0 16px var(--neon-cyan);
+  }
+
+  .range-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  .range-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 6px rgba(0,245,255,0.5);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  /* TOGGLE */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border: 1px solid rgba(0,245,255,0.1);
+    border-radius: 4px;
+    background: rgba(0,245,255,0.02);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .toggle-row:hover {
+    border-color: rgba(0,245,255,0.3);
+    background: rgba(0,245,255,0.05);
+  }
+
+  .toggle-switch {
+    position: relative;
+    width: 44px; height: 22px;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,245,255,0.1);
+    border: 1px solid rgba(0,245,255,0.3);
+    border-radius: 22px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .toggle-track::before {
+    content: '';
+    position: absolute;
+    left: 3px; top: 50%; transform: translateY(-50%);
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    transition: all 0.3s;
+  }
+
+  .toggle-switch input:checked + .toggle-track {
+    background: rgba(0,245,255,0.2);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(0,245,255,0.3);
+  }
+
+  .toggle-switch input:checked + .toggle-track::before {
+    left: calc(100% - 17px);
+    background: var(--neon-cyan);
+    box-shadow: 0 0 6px var(--neon-cyan);
+  }
+
+  .toggle-info { flex: 1; }
+
+  .toggle-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--text-main);
+    letter-spacing: 1px;
+  }
+
+  .toggle-desc {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  /* DITHER SELECT */
+  .dither-opts {
+    display: none;
+    margin-top: 12px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .dither-opts.visible { display: block; }
+
+  /* COMPRESSION BAR */
+  .compression-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 4px;
+    margin-top: 6px;
+  }
+
+  .comp-btn {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,245,255,0.15);
+    border-radius: 2px;
+    background: var(--bg-panel);
+    color: var(--text-dim);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 8px 4px;
+  }
+
+  .comp-btn:hover {
+    border-color: rgba(0,255,136,0.5);
+    color: var(--neon-green);
+  }
+
+  .comp-btn.active {
+    background: rgba(0,255,136,0.12);
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+    box-shadow: 0 0 8px rgba(0,255,136,0.2);
+    text-shadow: 0 0 6px var(--neon-green);
+  }
+
+  /* BITRATE SELECTOR */
+  .bitrate-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .br-btn {
+    padding: 9px 4px;
+    text-align: center;
+    border: 1px solid rgba(255,238,0,0.15);
+    border-radius: 2px;
+    background: var(--bg-panel);
+    color: var(--text-dim);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .br-btn:hover { border-color: rgba(255,238,0,0.4); color: var(--neon-yellow); }
+
+  .br-btn.active {
+    background: rgba(255,238,0,0.08);
+    border-color: var(--neon-yellow);
+    color: var(--neon-yellow);
+    box-shadow: 0 0 8px rgba(255,238,0,0.2);
+    text-shadow: 0 0 6px var(--neon-yellow);
+  }
+
+  .br-badge {
+    display: block;
+    font-size: 8px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  /* CONVERT BUTTON */
+  .btn-convert {
+    width: 100%;
+    padding: 18px;
+    margin-top: 28px;
+    background: transparent;
+    border: 2px solid var(--neon-cyan);
+    border-radius: 4px;
+    color: var(--neon-cyan);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    text-shadow: 0 0 10px rgba(0,245,255,0.5);
+    box-shadow: 0 0 20px rgba(0,245,255,0.1);
+  }
+
+  .btn-convert::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.08), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+
+  .btn-convert:hover::before { transform: translateX(100%); }
+
+  .btn-convert:hover {
+    background: rgba(0,245,255,0.08);
+    box-shadow: 0 0 40px rgba(0,245,255,0.25), inset 0 0 20px rgba(0,245,255,0.05);
+  }
+
+  .btn-convert:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: var(--text-dim);
+    color: var(--text-dim);
+    text-shadow: none;
+    box-shadow: none;
+  }
+
+  .btn-convert:disabled:hover { background: transparent; }
+  .btn-convert:disabled::before { display: none; }
+
+  /* PROGRESS */
+  .progress-area {
+    display: none;
+    margin-top: 20px;
+  }
+
+  .progress-area.visible { display: block; }
+
+  .progress-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--neon-cyan);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: rgba(0,245,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid rgba(0,245,255,0.1);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(0,245,255,0.5);
+    position: relative;
+  }
+
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 30px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+    animation: progressShine 1s ease-in-out infinite;
+  }
+
+  @keyframes progressShine {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  .log-area {
+    margin-top: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--neon-green);
+    letter-spacing: 1px;
+    min-height: 16px;
+    text-shadow: 0 0 6px rgba(0,255,136,0.4);
+  }
+
+  /* RESULT */
+  .result-area {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid rgba(0,255,136,0.3);
+    border-radius: 4px;
+    background: rgba(0,255,136,0.04);
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .result-area.visible { display: block; }
+
+  .result-icon { font-size: 36px; margin-bottom: 8px; }
+
+  .result-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    color: var(--neon-green);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px var(--neon-green);
+    margin-bottom: 14px;
+  }
+
+  .btn-download {
+    display: inline-block;
+    padding: 12px 32px;
+    background: rgba(0,255,136,0.1);
+    border: 1px solid var(--neon-green);
+    border-radius: 3px;
+    color: var(--neon-green);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-shadow: 0 0 8px rgba(0,255,136,0.5);
+    box-shadow: 0 0 15px rgba(0,255,136,0.1);
+  }
+
+  .btn-download:hover {
+    background: rgba(0,255,136,0.18);
+    box-shadow: 0 0 25px rgba(0,255,136,0.25);
+  }
+
+  /* ERROR */
+  .error-msg {
+    display: none;
+    margin-top: 16px;
+    padding: 14px 18px;
+    border: 1px solid rgba(255,0,170,0.4);
+    border-radius: 3px;
+    background: rgba(255,0,170,0.05);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--neon-pink);
+    text-shadow: 0 0 8px rgba(255,0,170,0.4);
+  }
+
+  .error-msg.visible { display: block; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 0;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    border-top: 1px solid rgba(0,245,255,0.05);
+    margin-top: 10px;
+  }
+
+  footer span { color: var(--neon-pink); }
+
+  /* Scan line effect */
+  .scanlines {
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* Flicker animation */
+  @keyframes flicker {
+    0%, 96%, 100% { opacity: 1; }
+    97% { opacity: 0.95; }
+    98% { opacity: 1; }
+    99% { opacity: 0.97; }
+  }
+
+  .main-card { animation: flicker 12s infinite; }
+
+  /* Loading ffmpeg */
+  .ffmpeg-status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .dot-pulse {
+    display: inline-flex;
+    gap: 4px;
+  }
+
+  .dot-pulse span {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--neon-cyan);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+  .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  .ffmpeg-ready { color: var(--neon-green); text-shadow: 0 0 6px rgba(0,255,136,0.4); }
+  .ffmpeg-error { color: var(--neon-pink); }
+
+  /* Glitch text effect on title */
+  @keyframes glitch {
+    0%, 100% { clip-path: none; transform: none; }
+    92% { clip-path: none; transform: none; }
+    93% { clip-path: inset(10% 0 80% 0); transform: translate(-3px, 0); }
+    94% { clip-path: inset(60% 0 20% 0); transform: translate(3px, 0); }
+    95% { clip-path: none; transform: none; }
+  }
+
+  h1 { animation: shimmer 4s linear infinite, glitch 15s ease-in-out infinite; }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-dark); }
+  ::-webkit-scrollbar-thumb { background: rgba(0,245,255,0.3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0,245,255,0.5); }
+
+  .ogg-quality { display: none; }
+  .ogg-quality.show { display: block; }
 </style>
-
 </head>
 <body>
 <div class="scanlines"></div>
@@ -908,374 +906,372 @@ h1 { animation: shimmer 4s linear infinite, glitch 15s ease-in-out infinite; }
   <div class="main-card">
     <div class="corner-tag">[ SYS_AUDIO ]</div>
 
-```
-<!-- DROP ZONE -->
-<div class="drop-zone" id="dropZone">
-  <span class="drop-icon">🎵</span>
-  <div class="drop-title">CARGAR ARCHIVO DE AUDIO</div>
-  <div class="drop-sub">arrastra aquí o haz clic para seleccionar</div>
-  <div class="drop-formats">
-    <span class="fmt-badge">MP3</span>
-    <span class="fmt-badge">WAV</span>
-    <span class="fmt-badge">FLAC</span>
-    <span class="fmt-badge">AAC</span>
-    <span class="fmt-badge">OGG</span>
-    <span class="fmt-badge">OPUS</span>
-    <span class="fmt-badge">M4A</span>
-    <span class="fmt-badge">AIFF</span>
-  </div>
-</div>
-<input type="file" id="fileInput" accept="audio/*,.flac,.aiff,.opus">
-
-<!-- FILE INFO -->
-<div class="file-info" id="fileInfo">
-  <span class="file-icon">📂</span>
-  <div class="file-details">
-    <div class="file-name" id="fileName">—</div>
-    <div class="file-meta" id="fileMeta">—</div>
-  </div>
-  <button class="btn-clear" onclick="clearFile()">✕ LIMPIAR</button>
-</div>
-
-<!-- SETTINGS -->
-<div class="settings-panel" id="settingsPanel" style="display:none">
-
-  <div class="section-label">FORMATO DE SALIDA</div>
-
-  <div class="format-tabs" id="formatTabs">
-    <button class="fmt-tab active" data-fmt="mp3">MP3</button>
-    <button class="fmt-tab" data-fmt="wav">WAV</button>
-    <button class="fmt-tab" data-fmt="flac">FLAC</button>
-    <button class="fmt-tab" data-fmt="aac">AAC</button>
-    <button class="fmt-tab" data-fmt="ogg">OGG</button>
-    <button class="fmt-tab" data-fmt="opus">OPUS</button>
-    <button class="fmt-tab" data-fmt="m4a">M4A</button>
-    <button class="fmt-tab" data-fmt="aiff">AIFF</button>
-  </div>
-
-  <!-- MP3 OPTIONS -->
-  <div class="format-opts active" id="opts-mp3">
-    <div class="section-label">CONFIGURACIÓN MP3</div>
-    <label style="margin-bottom:10px;display:block;">BITRATE (kbps) — <span style="color:var(--neon-yellow)" id="mp3BitrateDisplay">320</span> kbps</label>
-    <div class="bitrate-grid" id="bitrateGrid"></div>
-    <div style="margin-top:16px" class="grid-2">
-      <div class="field">
-        <label>CANALES</label>
-        <select id="mp3Channels">
-          <option value="2">Estéreo</option>
-          <option value="1">Mono</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>SAMPLE RATE</label>
-        <select id="mp3SampleRate">
-          <option value="44100">44100 Hz</option>
-          <option value="48000">48000 Hz</option>
-          <option value="32000">32000 Hz</option>
-          <option value="22050">22050 Hz</option>
-        </select>
+    <!-- DROP ZONE -->
+    <div class="drop-zone" id="dropZone">
+      <span class="drop-icon">🎵</span>
+      <div class="drop-title">CARGAR ARCHIVO DE AUDIO</div>
+      <div class="drop-sub">arrastra aquí o haz clic para seleccionar</div>
+      <div class="drop-formats">
+        <span class="fmt-badge">MP3</span>
+        <span class="fmt-badge">WAV</span>
+        <span class="fmt-badge">FLAC</span>
+        <span class="fmt-badge">AAC</span>
+        <span class="fmt-badge">OGG</span>
+        <span class="fmt-badge">OPUS</span>
+        <span class="fmt-badge">M4A</span>
+        <span class="fmt-badge">AIFF</span>
       </div>
     </div>
-  </div>
+    <input type="file" id="fileInput" accept="audio/*,.flac,.aiff,.opus">
 
-  <!-- WAV OPTIONS -->
-  <div class="format-opts" id="opts-wav">
-    <div class="section-label">CONFIGURACIÓN WAV</div>
-    <div class="grid-2">
-      <div class="field">
-        <label>SAMPLE RATE</label>
-        <select id="wavSampleRate">
-          <option value="44100">44100 Hz (CD)</option>
-          <option value="48000" selected>48000 Hz (Estudio)</option>
-          <option value="88200">88200 Hz (Hi-Res)</option>
-          <option value="96000">96000 Hz (Hi-Res)</option>
-          <option value="176400">176400 Hz (DXD)</option>
-          <option value="192000">192000 Hz (DXD)</option>
-          <option value="22050">22050 Hz</option>
-          <option value="32000">32000 Hz</option>
-          <option value="8000">8000 Hz</option>
-        </select>
+    <!-- FILE INFO -->
+    <div class="file-info" id="fileInfo">
+      <span class="file-icon">📂</span>
+      <div class="file-details">
+        <div class="file-name" id="fileName">—</div>
+        <div class="file-meta" id="fileMeta">—</div>
       </div>
-      <div class="field">
-        <label>BIT DEPTH</label>
-        <select id="wavBitDepth">
-          <option value="pcm_s32le">32 bits (Float)</option>
-          <option value="pcm_s24le">24 bits</option>
-          <option value="pcm_s16le" selected>16 bits (CD)</option>
-          <option value="pcm_u8">8 bits</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>CANALES</label>
-        <select id="wavChannels">
-          <option value="2">Estéreo</option>
-          <option value="1">Mono</option>
-        </select>
-      </div>
+      <button class="btn-clear" onclick="clearFile()">✕ LIMPIAR</button>
     </div>
 
-    <!-- DITHER WAV -->
-    <div style="margin-top:16px">
-      <label class="toggle-row" id="wavDitherToggle">
-        <div class="toggle-switch">
-          <input type="checkbox" id="wavDither">
-          <div class="toggle-track"></div>
-        </div>
-        <div class="toggle-info">
-          <div class="toggle-title">APLICAR DITHER</div>
-          <div class="toggle-desc">Reduce distorsión cuantización al bajar bit depth</div>
-        </div>
-      </label>
-      <div class="dither-opts" id="wavDitherOpts">
-        <div class="field" style="margin-top:8px">
-          <label>TIPO DE DITHER</label>
-          <select id="wavDitherType">
-            <option value="triangular">Triangular (TPDF) — Estándar</option>
-            <option value="rectangular">Rectangular (RPDF)</option>
-            <option value="gaussian">Gaussiano — Suave</option>
-          </select>
+    <!-- SETTINGS -->
+    <div class="settings-panel" id="settingsPanel" style="display:none">
+
+      <div class="section-label">FORMATO DE SALIDA</div>
+
+      <div class="format-tabs" id="formatTabs">
+        <button class="fmt-tab active" data-fmt="mp3">MP3</button>
+        <button class="fmt-tab" data-fmt="wav">WAV</button>
+        <button class="fmt-tab" data-fmt="flac">FLAC</button>
+        <button class="fmt-tab" data-fmt="aac">AAC</button>
+        <button class="fmt-tab" data-fmt="ogg">OGG</button>
+        <button class="fmt-tab" data-fmt="opus">OPUS</button>
+        <button class="fmt-tab" data-fmt="m4a">M4A</button>
+        <button class="fmt-tab" data-fmt="aiff">AIFF</button>
+      </div>
+
+      <!-- MP3 OPTIONS -->
+      <div class="format-opts active" id="opts-mp3">
+        <div class="section-label">CONFIGURACIÓN MP3</div>
+        <label style="margin-bottom:10px;display:block;">BITRATE (kbps) — <span style="color:var(--neon-yellow)" id="mp3BitrateDisplay">320</span> kbps</label>
+        <div class="bitrate-grid" id="bitrateGrid"></div>
+        <div style="margin-top:16px" class="grid-2">
+          <div class="field">
+            <label>CANALES</label>
+            <select id="mp3Channels">
+              <option value="2">Estéreo</option>
+              <option value="1">Mono</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>SAMPLE RATE</label>
+            <select id="mp3SampleRate">
+              <option value="44100">44100 Hz</option>
+              <option value="48000">48000 Hz</option>
+              <option value="32000">32000 Hz</option>
+              <option value="22050">22050 Hz</option>
+            </select>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- FLAC OPTIONS -->
-  <div class="format-opts" id="opts-flac">
-    <div class="section-label">CONFIGURACIÓN FLAC</div>
-    <div class="grid-2">
-      <div class="field">
-        <label>SAMPLE RATE</label>
-        <select id="flacSampleRate">
-          <option value="44100">44100 Hz (CD)</option>
-          <option value="48000" selected>48000 Hz (Estudio)</option>
-          <option value="88200">88200 Hz (Hi-Res)</option>
-          <option value="96000">96000 Hz (Hi-Res)</option>
-          <option value="176400">176400 Hz (DXD)</option>
-          <option value="192000">192000 Hz (DXD)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>BIT DEPTH</label>
-        <select id="flacBitDepth">
-          <option value="pcm_s32le">32 bits</option>
-          <option value="pcm_s24le">24 bits</option>
-          <option value="pcm_s16le" selected>16 bits (CD)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>CANALES</label>
-        <select id="flacChannels">
-          <option value="2">Estéreo</option>
-          <option value="1">Mono</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- COMPRESSION LEVEL -->
-    <div style="margin-top:16px">
-      <label>NIVEL DE COMPRESIÓN SIN PÉRDIDAS</label>
-      <div style="margin-top:4px;font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);margin-bottom:8px">
-        Nivel 0 = más rápido · Nivel 8 = mayor compresión (sin pérdida de calidad)
-      </div>
-      <div class="compression-grid" id="flacCompGrid"></div>
-      <div style="margin-top:6px;font-family:'Share Tech Mono';font-size:10px;color:var(--neon-green);text-shadow:0 0 6px rgba(0,255,136,0.4)">
-        NIVEL SELECCIONADO: <span id="flacCompDisplay">5</span>
-      </div>
-    </div>
-
-    <!-- DITHER FLAC -->
-    <div style="margin-top:16px">
-      <label class="toggle-row" id="flacDitherToggle">
-        <div class="toggle-switch">
-          <input type="checkbox" id="flacDither">
-          <div class="toggle-track"></div>
+      <!-- WAV OPTIONS -->
+      <div class="format-opts" id="opts-wav">
+        <div class="section-label">CONFIGURACIÓN WAV</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>SAMPLE RATE</label>
+            <select id="wavSampleRate">
+              <option value="44100">44100 Hz (CD)</option>
+              <option value="48000" selected>48000 Hz (Estudio)</option>
+              <option value="88200">88200 Hz (Hi-Res)</option>
+              <option value="96000">96000 Hz (Hi-Res)</option>
+              <option value="176400">176400 Hz (DXD)</option>
+              <option value="192000">192000 Hz (DXD)</option>
+              <option value="22050">22050 Hz</option>
+              <option value="32000">32000 Hz</option>
+              <option value="8000">8000 Hz</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>BIT DEPTH</label>
+            <select id="wavBitDepth">
+              <option value="pcm_s32le">32 bits (Float)</option>
+              <option value="pcm_s24le">24 bits</option>
+              <option value="pcm_s16le" selected>16 bits (CD)</option>
+              <option value="pcm_u8">8 bits</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>CANALES</label>
+            <select id="wavChannels">
+              <option value="2">Estéreo</option>
+              <option value="1">Mono</option>
+            </select>
+          </div>
         </div>
-        <div class="toggle-info">
-          <div class="toggle-title">APLICAR DITHER</div>
-          <div class="toggle-desc">Reduce distorsión cuantización al bajar bit depth</div>
-        </div>
-      </label>
-      <div class="dither-opts" id="flacDitherOpts">
-        <div class="field" style="margin-top:8px">
-          <label>TIPO DE DITHER</label>
-          <select id="flacDitherType">
-            <option value="triangular">Triangular (TPDF) — Estándar</option>
-            <option value="rectangular">Rectangular (RPDF)</option>
-            <option value="gaussian">Gaussiano — Suave</option>
-          </select>
+
+        <!-- DITHER WAV -->
+        <div style="margin-top:16px">
+          <label class="toggle-row" id="wavDitherToggle">
+            <div class="toggle-switch">
+              <input type="checkbox" id="wavDither">
+              <div class="toggle-track"></div>
+            </div>
+            <div class="toggle-info">
+              <div class="toggle-title">APLICAR DITHER</div>
+              <div class="toggle-desc">Reduce distorsión cuantización al bajar bit depth</div>
+            </div>
+          </label>
+          <div class="dither-opts" id="wavDitherOpts">
+            <div class="field" style="margin-top:8px">
+              <label>TIPO DE DITHER</label>
+              <select id="wavDitherType">
+                <option value="triangular">Triangular (TPDF) — Estándar</option>
+                <option value="rectangular">Rectangular (RPDF)</option>
+                <option value="gaussian">Gaussiano — Suave</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- FLAC OPTIONS -->
+      <div class="format-opts" id="opts-flac">
+        <div class="section-label">CONFIGURACIÓN FLAC</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>SAMPLE RATE</label>
+            <select id="flacSampleRate">
+              <option value="44100">44100 Hz (CD)</option>
+              <option value="48000" selected>48000 Hz (Estudio)</option>
+              <option value="88200">88200 Hz (Hi-Res)</option>
+              <option value="96000">96000 Hz (Hi-Res)</option>
+              <option value="176400">176400 Hz (DXD)</option>
+              <option value="192000">192000 Hz (DXD)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>BIT DEPTH</label>
+            <select id="flacBitDepth">
+              <option value="pcm_s32le">32 bits</option>
+              <option value="pcm_s24le">24 bits</option>
+              <option value="pcm_s16le" selected>16 bits (CD)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>CANALES</label>
+            <select id="flacChannels">
+              <option value="2">Estéreo</option>
+              <option value="1">Mono</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- COMPRESSION LEVEL -->
+        <div style="margin-top:16px">
+          <label>NIVEL DE COMPRESIÓN SIN PÉRDIDAS</label>
+          <div style="margin-top:4px;font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);margin-bottom:8px">
+            Nivel 0 = más rápido · Nivel 8 = mayor compresión (sin pérdida de calidad)
+          </div>
+          <div class="compression-grid" id="flacCompGrid"></div>
+          <div style="margin-top:6px;font-family:'Share Tech Mono';font-size:10px;color:var(--neon-green);text-shadow:0 0 6px rgba(0,255,136,0.4)">
+            NIVEL SELECCIONADO: <span id="flacCompDisplay">5</span>
+          </div>
+        </div>
+
+        <!-- DITHER FLAC -->
+        <div style="margin-top:16px">
+          <label class="toggle-row" id="flacDitherToggle">
+            <div class="toggle-switch">
+              <input type="checkbox" id="flacDither">
+              <div class="toggle-track"></div>
+            </div>
+            <div class="toggle-info">
+              <div class="toggle-title">APLICAR DITHER</div>
+              <div class="toggle-desc">Reduce distorsión cuantización al bajar bit depth</div>
+            </div>
+          </label>
+          <div class="dither-opts" id="flacDitherOpts">
+            <div class="field" style="margin-top:8px">
+              <label>TIPO DE DITHER</label>
+              <select id="flacDitherType">
+                <option value="triangular">Triangular (TPDF) — Estándar</option>
+                <option value="rectangular">Rectangular (RPDF)</option>
+                <option value="gaussian">Gaussiano — Suave</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AAC OPTIONS -->
+      <div class="format-opts" id="opts-aac">
+        <div class="section-label">CONFIGURACIÓN AAC</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>BITRATE (kbps)</label>
+            <select id="aacBitrate">
+              <option value="64k">64 kbps</option>
+              <option value="96k">96 kbps</option>
+              <option value="128k" selected>128 kbps</option>
+              <option value="192k">192 kbps</option>
+              <option value="256k">256 kbps</option>
+              <option value="320k">320 kbps</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>CANALES</label>
+            <select id="aacChannels">
+              <option value="2">Estéreo</option>
+              <option value="1">Mono</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- OGG OPTIONS -->
+      <div class="format-opts" id="opts-ogg">
+        <div class="section-label">CONFIGURACIÓN OGG VORBIS</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>CALIDAD (VBR)</label>
+            <select id="oggQuality">
+              <option value="-1">-1 — Mínima</option>
+              <option value="0">0 — Muy baja</option>
+              <option value="2">2 — Baja</option>
+              <option value="4">4 — Media</option>
+              <option value="6" selected>6 — Alta</option>
+              <option value="8">8 — Muy alta</option>
+              <option value="10">10 — Máxima</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>CANALES</label>
+            <select id="oggChannels">
+              <option value="2">Estéreo</option>
+              <option value="1">Mono</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- OPUS OPTIONS -->
+      <div class="format-opts" id="opts-opus">
+        <div class="section-label">CONFIGURACIÓN OPUS</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>BITRATE (kbps)</label>
+            <select id="opusBitrate">
+              <option value="32k">32 kbps</option>
+              <option value="64k">64 kbps</option>
+              <option value="96k">96 kbps</option>
+              <option value="128k" selected>128 kbps</option>
+              <option value="192k">192 kbps</option>
+              <option value="256k">256 kbps</option>
+              <option value="320k">320 kbps</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>APLICACIÓN</label>
+            <select id="opusApp">
+              <option value="audio" selected>Audio (música)</option>
+              <option value="voip">VoIP (voz)</option>
+              <option value="lowdelay">Baja latencia</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- M4A OPTIONS -->
+      <div class="format-opts" id="opts-m4a">
+        <div class="section-label">CONFIGURACIÓN M4A (AAC)</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>BITRATE (kbps)</label>
+            <select id="m4aBitrate">
+              <option value="96k">96 kbps</option>
+              <option value="128k" selected>128 kbps</option>
+              <option value="192k">192 kbps</option>
+              <option value="256k">256 kbps</option>
+              <option value="320k">320 kbps</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>CANALES</label>
+            <select id="m4aChannels">
+              <option value="2">Estéreo</option>
+              <option value="1">Mono</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- AIFF OPTIONS -->
+      <div class="format-opts" id="opts-aiff">
+        <div class="section-label">CONFIGURACIÓN AIFF</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>SAMPLE RATE</label>
+            <select id="aiffSampleRate">
+              <option value="44100">44100 Hz (CD)</option>
+              <option value="48000" selected>48000 Hz</option>
+              <option value="88200">88200 Hz</option>
+              <option value="96000">96000 Hz</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>BIT DEPTH</label>
+            <select id="aiffBitDepth">
+              <option value="pcm_s32be">32 bits</option>
+              <option value="pcm_s24be">24 bits</option>
+              <option value="pcm_s16be" selected>16 bits</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>CANALES</label>
+            <select id="aiffChannels">
+              <option value="2">Estéreo</option>
+              <option value="1">Mono</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONVERT BUTTON -->
+      <button class="btn-convert" id="convertBtn" onclick="startConvert()">
+        ⚡ CONVERTIR AUDIO
+      </button>
+
+      <!-- PROGRESS -->
+      <div class="progress-area" id="progressArea">
+        <div class="progress-label">
+          <span>PROCESANDO</span>
+          <span id="progressPct">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="log-area" id="logArea">// Iniciando motor FFmpeg...</div>
+      </div>
+
+      <!-- ERROR -->
+      <div class="error-msg" id="errorMsg"></div>
+
+      <!-- RESULT -->
+      <div class="result-area" id="resultArea">
+        <div class="result-icon">✅</div>
+        <div class="result-title">CONVERSIÓN COMPLETADA</div>
+        <a class="btn-download" id="downloadBtn">⬇ DESCARGAR ARCHIVO</a>
+      </div>
+
+    </div><!-- /settings-panel -->
+
+    <!-- FFmpeg Status -->
+    <div class="ffmpeg-status" id="ffmpegStatus">
+      <div class="dot-pulse"><span></span><span></span><span></span></div>
+      CARGANDO MOTOR DE AUDIO...
     </div>
-  </div>
-
-  <!-- AAC OPTIONS -->
-  <div class="format-opts" id="opts-aac">
-    <div class="section-label">CONFIGURACIÓN AAC</div>
-    <div class="grid-2">
-      <div class="field">
-        <label>BITRATE (kbps)</label>
-        <select id="aacBitrate">
-          <option value="64k">64 kbps</option>
-          <option value="96k">96 kbps</option>
-          <option value="128k" selected>128 kbps</option>
-          <option value="192k">192 kbps</option>
-          <option value="256k">256 kbps</option>
-          <option value="320k">320 kbps</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>CANALES</label>
-        <select id="aacChannels">
-          <option value="2">Estéreo</option>
-          <option value="1">Mono</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- OGG OPTIONS -->
-  <div class="format-opts" id="opts-ogg">
-    <div class="section-label">CONFIGURACIÓN OGG VORBIS</div>
-    <div class="grid-2">
-      <div class="field">
-        <label>CALIDAD (VBR)</label>
-        <select id="oggQuality">
-          <option value="-1">-1 — Mínima</option>
-          <option value="0">0 — Muy baja</option>
-          <option value="2">2 — Baja</option>
-          <option value="4">4 — Media</option>
-          <option value="6" selected>6 — Alta</option>
-          <option value="8">8 — Muy alta</option>
-          <option value="10">10 — Máxima</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>CANALES</label>
-        <select id="oggChannels">
-          <option value="2">Estéreo</option>
-          <option value="1">Mono</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- OPUS OPTIONS -->
-  <div class="format-opts" id="opts-opus">
-    <div class="section-label">CONFIGURACIÓN OPUS</div>
-    <div class="grid-2">
-      <div class="field">
-        <label>BITRATE (kbps)</label>
-        <select id="opusBitrate">
-          <option value="32k">32 kbps</option>
-          <option value="64k">64 kbps</option>
-          <option value="96k">96 kbps</option>
-          <option value="128k" selected>128 kbps</option>
-          <option value="192k">192 kbps</option>
-          <option value="256k">256 kbps</option>
-          <option value="320k">320 kbps</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>APLICACIÓN</label>
-        <select id="opusApp">
-          <option value="audio" selected>Audio (música)</option>
-          <option value="voip">VoIP (voz)</option>
-          <option value="lowdelay">Baja latencia</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- M4A OPTIONS -->
-  <div class="format-opts" id="opts-m4a">
-    <div class="section-label">CONFIGURACIÓN M4A (AAC)</div>
-    <div class="grid-2">
-      <div class="field">
-        <label>BITRATE (kbps)</label>
-        <select id="m4aBitrate">
-          <option value="96k">96 kbps</option>
-          <option value="128k" selected>128 kbps</option>
-          <option value="192k">192 kbps</option>
-          <option value="256k">256 kbps</option>
-          <option value="320k">320 kbps</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>CANALES</label>
-        <select id="m4aChannels">
-          <option value="2">Estéreo</option>
-          <option value="1">Mono</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- AIFF OPTIONS -->
-  <div class="format-opts" id="opts-aiff">
-    <div class="section-label">CONFIGURACIÓN AIFF</div>
-    <div class="grid-2">
-      <div class="field">
-        <label>SAMPLE RATE</label>
-        <select id="aiffSampleRate">
-          <option value="44100">44100 Hz (CD)</option>
-          <option value="48000" selected>48000 Hz</option>
-          <option value="88200">88200 Hz</option>
-          <option value="96000">96000 Hz</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>BIT DEPTH</label>
-        <select id="aiffBitDepth">
-          <option value="pcm_s32be">32 bits</option>
-          <option value="pcm_s24be">24 bits</option>
-          <option value="pcm_s16be" selected>16 bits</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>CANALES</label>
-        <select id="aiffChannels">
-          <option value="2">Estéreo</option>
-          <option value="1">Mono</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- CONVERT BUTTON -->
-  <button class="btn-convert" id="convertBtn" onclick="startConvert()">
-    ⚡ CONVERTIR AUDIO
-  </button>
-
-  <!-- PROGRESS -->
-  <div class="progress-area" id="progressArea">
-    <div class="progress-label">
-      <span>PROCESANDO</span>
-      <span id="progressPct">0%</span>
-    </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-    <div class="log-area" id="logArea">// Iniciando motor FFmpeg...</div>
-  </div>
-
-  <!-- ERROR -->
-  <div class="error-msg" id="errorMsg"></div>
-
-  <!-- RESULT -->
-  <div class="result-area" id="resultArea">
-    <div class="result-icon">✅</div>
-    <div class="result-title">CONVERSIÓN COMPLETADA</div>
-    <a class="btn-download" id="downloadBtn">⬇ DESCARGAR ARCHIVO</a>
-  </div>
-
-</div><!-- /settings-panel -->
-
-<!-- FFmpeg Status -->
-<div class="ffmpeg-status" id="ffmpegStatus">
-  <div class="dot-pulse"><span></span><span></span><span></span></div>
-  CARGANDO MOTOR DE AUDIO...
-</div>
-```
 
   </div><!-- /main-card -->
 
@@ -1576,6 +1572,5 @@ function showError(msg) {
   el.classList.add('visible');
 }
 </script>
-
 </body>
 </html>
