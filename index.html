@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Miaulement Convertidor</title>
 
-<!-- Carga directa de scripts de FFmpeg v0.11.6 -->
-<script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
-
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap');
 
@@ -47,17 +44,6 @@
     pointer-events: none;
     z-index: 0;
     animation: gridPulse 8s ease-in-out infinite;
-  }
-
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(ellipse at 20% 50%, rgba(0,245,255,0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 20%, rgba(255,0,170,0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at 60% 80%, rgba(0,255,136,0.03) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
   }
 
   @keyframes gridPulse {
@@ -102,7 +88,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer 4s linear infinite, glitch 15s ease-in-out infinite;
+    animation: shimmer 4s linear infinite;
   }
 
   @keyframes shimmer {
@@ -149,15 +135,6 @@
     position: relative;
     margin-bottom: 20px;
     box-shadow: 0 0 30px rgba(0,245,255,0.05), inset 0 0 30px rgba(0,0,0,0.5);
-    animation: flicker 12s infinite;
-  }
-
-  .main-card::before {
-    content: '';
-    position: absolute;
-    top: -1px; left: 20px; right: 20px; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-    border-radius: 2px;
   }
 
   .corner-tag {
@@ -178,25 +155,12 @@
     transition: all 0.3s ease;
     position: relative;
     background: rgba(0,245,255,0.02);
-    overflow: hidden;
   }
 
-  .drop-zone::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, transparent 50%, rgba(255,0,170,0.05) 100%);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .drop-zone:hover::before,
-  .drop-zone.dragging::before { opacity: 1; }
-
-  .drop-zone:hover,
-  .drop-zone.dragging {
+  .drop-zone:hover, .drop-zone.dragging {
     border-color: var(--neon-cyan);
-    box-shadow: 0 0 20px rgba(0,245,255,0.15), inset 0 0 20px rgba(0,245,255,0.05);
+    background: rgba(0,245,255,0.06);
+    box-shadow: 0 0 20px rgba(0,245,255,0.15);
   }
 
   .drop-icon {
@@ -204,17 +168,13 @@
     margin-bottom: 12px;
     display: block;
     filter: drop-shadow(0 0 12px var(--neon-cyan));
-    transition: transform 0.3s;
   }
-
-  .drop-zone:hover .drop-icon { transform: scale(1.1); }
 
   .drop-title {
     font-family: 'Orbitron', sans-serif;
     font-size: 15px;
     color: var(--neon-cyan);
     letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba(0,245,255,0.5);
     margin-bottom: 6px;
   }
 
@@ -222,29 +182,7 @@
     font-size: 12px;
     color: var(--text-dim);
     font-family: 'Share Tech Mono', monospace;
-    letter-spacing: 1px;
   }
-
-  .drop-formats {
-    margin-top: 14px;
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .fmt-badge {
-    padding: 3px 10px;
-    border: 1px solid rgba(0,255,136,0.3);
-    border-radius: 2px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: var(--neon-green);
-    letter-spacing: 1px;
-    text-shadow: 0 0 6px rgba(0,255,136,0.4);
-  }
-
-  #fileInput { display: none; }
 
   .file-info {
     display: none;
@@ -258,7 +196,6 @@
   }
 
   .file-info.visible { display: flex; }
-  .file-icon { font-size: 28px; }
   .file-details { flex: 1; }
 
   .file-name {
@@ -284,14 +221,6 @@
     cursor: pointer;
     font-family: 'Share Tech Mono', monospace;
     font-size: 11px;
-    letter-spacing: 1px;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-
-  .btn-clear:hover {
-    background: rgba(255,0,170,0.1);
-    box-shadow: 0 0 10px rgba(255,0,170,0.3);
   }
 
   .settings-panel { margin-top: 24px; }
@@ -301,7 +230,6 @@
     font-size: 10px;
     letter-spacing: 3px;
     color: var(--neon-pink);
-    text-shadow: 0 0 8px rgba(255,0,170,0.5);
     margin-bottom: 16px;
     display: flex;
     align-items: center;
@@ -309,25 +237,40 @@
   }
 
   .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
+    content: ''; flex: 1; height: 1px;
     background: linear-gradient(90deg, rgba(255,0,170,0.3), transparent);
   }
 
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .format-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
 
-  @media (max-width: 600px) {
-    .grid-2 { grid-template-columns: 1fr; }
-    .main-card { padding: 20px 16px; }
+  .fmt-tab {
+    flex: 1;
+    min-width: 70px;
+    padding: 10px 8px;
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 2px;
+    background: var(--bg-panel);
+    color: var(--text-dim);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    cursor: pointer;
+    text-align: center;
   }
+
+  .fmt-tab.active {
+    border-color: var(--neon-cyan);
+    background: rgba(0,245,255,0.08);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 12px rgba(0,245,255,0.2);
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
   .field { display: flex; flex-direction: column; gap: 6px; }
 
   label {
     font-family: 'Share Tech Mono', monospace;
     font-size: 10px;
-    letter-spacing: 2px;
     color: var(--text-dim);
     text-transform: uppercase;
   }
@@ -342,47 +285,7 @@
     font-size: 13px;
     padding: 8px 12px;
     outline: none;
-    transition: all 0.2s;
-    cursor: pointer;
   }
-
-  select:focus, select:hover {
-    border-color: var(--neon-cyan);
-    box-shadow: 0 0 12px rgba(0,245,255,0.15);
-  }
-
-  select option { background: #0a1520; color: var(--text-main); }
-
-  .format-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-
-  .fmt-tab {
-    flex: 1;
-    min-width: 70px;
-    padding: 10px 8px;
-    border: 1px solid rgba(0,245,255,0.2);
-    border-radius: 2px;
-    background: var(--bg-panel);
-    color: var(--text-dim);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-  }
-
-  .fmt-tab:hover { border-color: rgba(0,245,255,0.4); color: var(--neon-cyan); }
-
-  .fmt-tab.active {
-    border-color: var(--neon-cyan);
-    background: rgba(0,245,255,0.08);
-    color: var(--neon-cyan);
-    box-shadow: 0 0 12px rgba(0,245,255,0.2);
-    text-shadow: 0 0 8px var(--neon-cyan);
-  }
-
-  .format-opts { display: none; }
-  .format-opts.active { display: block; }
 
   .toggle-row {
     display: flex;
@@ -394,84 +297,6 @@
     background: rgba(0,245,255,0.02);
     cursor: pointer;
   }
-
-  .toggle-switch { position: relative; width: 44px; height: 22px; flex-shrink: 0; }
-  .toggle-switch input { opacity: 0; width: 0; height: 0; }
-
-  .toggle-track {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,245,255,0.1);
-    border: 1px solid rgba(0,245,255,0.3);
-    border-radius: 22px;
-    cursor: pointer;
-  }
-
-  .toggle-track::before {
-    content: '';
-    position: absolute;
-    left: 3px; top: 50%; transform: translateY(-50%);
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    background: var(--text-dim);
-    transition: all 0.3s;
-  }
-
-  .toggle-switch input:checked + .toggle-track::before {
-    left: calc(100% - 17px);
-    background: var(--neon-cyan);
-  }
-
-  .toggle-info { flex: 1; }
-  .toggle-title { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text-main); }
-  .toggle-desc { font-size: 10px; color: var(--text-dim); font-family: 'Share Tech Mono', monospace; }
-
-  .dither-opts { display: none; margin-top: 12px; }
-  .dither-opts.visible { display: block; }
-
-  .compression-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 4px; margin-top: 6px; }
-
-  .comp-btn {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(0,245,255,0.15);
-    border-radius: 2px;
-    background: var(--bg-panel);
-    color: var(--text-dim);
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    cursor: pointer;
-  }
-
-  .comp-btn.active {
-    background: rgba(0,255,136,0.12);
-    border-color: var(--neon-green);
-    color: var(--neon-green);
-  }
-
-  .bitrate-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-
-  .br-btn {
-    padding: 9px 4px;
-    text-align: center;
-    border: 1px solid rgba(255,238,0,0.15);
-    border-radius: 2px;
-    background: var(--bg-panel);
-    color: var(--text-dim);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    cursor: pointer;
-  }
-
-  .br-btn.active {
-    background: rgba(255,238,0,0.08);
-    border-color: var(--neon-yellow);
-    color: var(--neon-yellow);
-  }
-
-  .br-badge { display: block; font-size: 8px; color: var(--text-dim); margin-top: 2px; }
 
   .btn-convert {
     width: 100%;
@@ -487,19 +312,11 @@
     letter-spacing: 4px;
     cursor: pointer;
     transition: all 0.3s;
-    text-shadow: 0 0 10px rgba(0,245,255,0.5);
   }
 
   .btn-convert:hover {
     background: rgba(0,245,255,0.08);
-    box-shadow: 0 0 40px rgba(0,245,255,0.25);
-  }
-
-  .btn-convert:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-    border-color: var(--text-dim);
-    color: var(--text-dim);
+    box-shadow: 0 0 30px rgba(0,245,255,0.25);
   }
 
   .progress-area { display: none; margin-top: 20px; }
@@ -509,7 +326,6 @@
     font-family: 'Share Tech Mono', monospace;
     font-size: 11px;
     color: var(--neon-cyan);
-    letter-spacing: 2px;
     margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
@@ -527,16 +343,7 @@
     height: 100%;
     background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
     width: 0%;
-    transition: width 0.3s ease;
-  }
-
-  .log-area {
-    margin-top: 12px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: var(--neon-green);
-    letter-spacing: 1px;
-    min-height: 16px;
+    transition: width 0.2s;
   }
 
   .result-area {
@@ -550,15 +357,6 @@
   }
 
   .result-area.visible { display: block; }
-  .result-icon { font-size: 36px; margin-bottom: 8px; }
-
-  .result-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 14px;
-    color: var(--neon-green);
-    letter-spacing: 2px;
-    margin-bottom: 14px;
-  }
 
   .btn-download {
     display: inline-block;
@@ -569,15 +367,8 @@
     color: var(--neon-green);
     font-family: 'Orbitron', sans-serif;
     font-size: 12px;
-    letter-spacing: 2px;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-download:hover {
-    background: rgba(0,255,136,0.18);
-    box-shadow: 0 0 25px rgba(0,255,136,0.25);
   }
 
   .error-msg {
@@ -600,78 +391,39 @@
     font-family: 'Share Tech Mono', monospace;
     font-size: 10px;
     color: var(--text-dim);
-    letter-spacing: 2px;
-    border-top: 1px solid rgba(0,245,255,0.05);
-    margin-top: 10px;
   }
-
-  footer span { color: var(--neon-pink); }
-
-  .scanlines {
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
-    pointer-events: none;
-    z-index: 999;
-  }
-
-  .ffmpeg-status {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: var(--text-dim);
-    letter-spacing: 2px;
-    text-align: center;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .ffmpeg-ready { color: var(--neon-green); }
-  .ffmpeg-error { color: var(--neon-pink); }
 </style>
 </head>
 <body>
-<div class="scanlines"></div>
 
 <div class="container">
   <header>
     <span class="logo-cat">🐱</span>
     <h1>MIAULEMENT CONVERTIDOR</h1>
-    <div class="tagline">// AUDIO FORMAT CONVERTER v2.0 //</div>
+    <div class="tagline">// NATIVE AUDIO ENGINE v3.0 //</div>
     <div class="header-line"></div>
   </header>
 
   <div class="main-card">
-    <div class="corner-tag">[ SYS_AUDIO ]</div>
+    <div class="corner-tag">[ SYS_AUDIO_LOCAL ]</div>
 
     <!-- DROP ZONE -->
     <div class="drop-zone" id="dropZone">
       <span class="drop-icon">🎵</span>
       <div class="drop-title">CARGAR ARCHIVO DE AUDIO</div>
-      <div class="drop-sub">arrastra aquí o haz clic para seleccionar</div>
-      <div class="drop-formats">
-        <span class="fmt-badge">MP3</span>
-        <span class="fmt-badge">WAV</span>
-        <span class="fmt-badge">FLAC</span>
-        <span class="fmt-badge">AAC</span>
-        <span class="fmt-badge">OGG</span>
-        <span class="fmt-badge">OPUS</span>
-        <span class="fmt-badge">M4A</span>
-        <span class="fmt-badge">AIFF</span>
-      </div>
+      <div class="drop-sub">haz clic aquí o arrastra un archivo de audio</div>
+      <!-- INPUT FILE DIRECTO -->
+      <input type="file" id="fileInput" accept="audio/*,.wav,.flac,.mp3,.ogg,.m4a,.aiff" style="display:none">
     </div>
-    <input type="file" id="fileInput" accept="audio/*,.flac,.aiff,.opus">
 
     <!-- FILE INFO -->
     <div class="file-info" id="fileInfo">
-      <span class="file-icon">📂</span>
+      <span style="font-size:24px">📂</span>
       <div class="file-details">
         <div class="file-name" id="fileName">—</div>
         <div class="file-meta" id="fileMeta">—</div>
       </div>
-      <button class="btn-clear" onclick="clearFile()">✕ LIMPIAR</button>
+      <button class="btn-clear" id="btnClear">✕ LIMPIAR</button>
     </div>
 
     <!-- SETTINGS PANEL -->
@@ -680,630 +432,268 @@
       <div class="section-label">FORMATO DE SALIDA</div>
 
       <div class="format-tabs" id="formatTabs">
-        <button class="fmt-tab active" data-fmt="mp3">MP3</button>
-        <button class="fmt-tab" data-fmt="wav">WAV</button>
+        <button class="fmt-tab active" data-fmt="wav">WAV</button>
         <button class="fmt-tab" data-fmt="flac">FLAC</button>
-        <button class="fmt-tab" data-fmt="aac">AAC</button>
-        <button class="fmt-tab" data-fmt="ogg">OGG</button>
-        <button class="fmt-tab" data-fmt="opus">OPUS</button>
-        <button class="fmt-tab" data-fmt="m4a">M4A</button>
         <button class="fmt-tab" data-fmt="aiff">AIFF</button>
       </div>
 
-      <!-- MP3 OPTIONS -->
-      <div class="format-opts active" id="opts-mp3">
-        <div class="section-label">CONFIGURACIÓN MP3</div>
-        <label style="margin-bottom:10px;display:block;">BITRATE (kbps) — <span style="color:var(--neon-yellow)" id="mp3BitrateDisplay">320</span> kbps</label>
-        <div class="bitrate-grid" id="bitrateGrid"></div>
-        <div style="margin-top:16px" class="grid-2">
-          <div class="field">
-            <label>CANALES</label>
-            <select id="mp3Channels">
-              <option value="2">Estéreo</option>
-              <option value="1">Mono</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>SAMPLE RATE</label>
-            <select id="mp3SampleRate">
-              <option value="44100">44100 Hz</option>
-              <option value="48000">48000 Hz</option>
-              <option value="32000">32000 Hz</option>
-              <option value="22050">22050 Hz</option>
-            </select>
-          </div>
+      <div class="grid-2" style="margin-top:16px;">
+        <div class="field">
+          <label>SAMPLE RATE</label>
+          <select id="sampleRateSelect">
+            <option value="44100">44100 Hz (CD)</option>
+            <option value="48000" selected>48000 Hz (Estudio)</option>
+            <option value="88200">88200 Hz (Hi-Res)</option>
+            <option value="96000">96000 Hz (Hi-Res)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>BIT DEPTH / FORMATO</label>
+          <select id="bitDepthSelect">
+            <option value="16">16 bits (PCM CD)</option>
+            <option value="24" selected>24 bits (PCM Studio)</option>
+            <option value="32">32 bits (Float)</option>
+          </select>
         </div>
       </div>
 
-      <!-- WAV OPTIONS -->
-      <div class="format-opts" id="opts-wav">
-        <div class="section-label">CONFIGURACIÓN WAV</div>
-        <div class="grid-2">
-          <div class="field">
-            <label>SAMPLE RATE</label>
-            <select id="wavSampleRate">
-              <option value="44100">44100 Hz (CD)</option>
-              <option value="48000" selected>48000 Hz (Estudio)</option>
-              <option value="88200">88200 Hz (Hi-Res)</option>
-              <option value="96000">96000 Hz (Hi-Res)</option>
-              <option value="176400">176400 Hz (DXD)</option>
-              <option value="192000">192000 Hz (DXD)</option>
-              <option value="22050">22050 Hz</option>
-              <option value="32000">32000 Hz</option>
-              <option value="8000">8000 Hz</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>BIT DEPTH</label>
-            <select id="wavBitDepth">
-              <option value="pcm_s32le">32 bits (Float)</option>
-              <option value="pcm_s24le">24 bits</option>
-              <option value="pcm_s16le" selected>16 bits (CD)</option>
-              <option value="pcm_u8">8 bits</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>CANALES</label>
-            <select id="wavChannels">
-              <option value="2">Estéreo</option>
-              <option value="1">Mono</option>
-            </select>
-          </div>
-        </div>
-
-        <div style="margin-top:16px">
-          <label class="toggle-row" id="wavDitherToggle">
-            <div class="toggle-switch">
-              <input type="checkbox" id="wavDither">
-              <div class="toggle-track"></div>
-            </div>
-            <div class="toggle-info">
-              <div class="toggle-title">APLICAR DITHER</div>
-              <div class="toggle-desc">Reduce distorsión cuantización al bajar bit depth</div>
-            </div>
-          </label>
-          <div class="dither-opts" id="wavDitherOpts">
-            <div class="field" style="margin-top:8px">
-              <label>TIPO DE DITHER</label>
-              <select id="wavDitherType">
-                <option value="triangular">Triangular (TPDF) — Estándar</option>
-                <option value="rectangular">Rectangular (RPDF)</option>
-                <option value="gaussian">Gaussiano — Suave</option>
-              </select>
-            </div>
-          </div>
-        </div>
+      <div style="margin-top:16px">
+        <label class="toggle-row">
+          <input type="checkbox" id="ditherCheck" checked>
+          <span style="font-family:'Share Tech Mono'; font-size:12px; color:var(--text-main);">APLICAR DITHER TPDF (Recomendado al reducir Bit Depth)</span>
+        </label>
       </div>
 
-      <!-- FLAC OPTIONS -->
-      <div class="format-opts" id="opts-flac">
-        <div class="section-label">CONFIGURACIÓN FLAC</div>
-        <div class="grid-2">
-          <div class="field">
-            <label>SAMPLE RATE</label>
-            <select id="flacSampleRate">
-              <option value="44100">44100 Hz (CD)</option>
-              <option value="48000" selected>48000 Hz (Estudio)</option>
-              <option value="88200">88200 Hz (Hi-Res)</option>
-              <option value="96000">96000 Hz (Hi-Res)</option>
-              <option value="176400">176400 Hz (DXD)</option>
-              <option value="192000">192000 Hz (DXD)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>BIT DEPTH</label>
-            <select id="flacBitDepth">
-              <option value="s32">32 bits</option>
-              <option value="s24le">24 bits</option>
-              <option value="s16" selected>16 bits (CD)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>CANALES</label>
-            <select id="flacChannels">
-              <option value="2">Estéreo</option>
-              <option value="1">Mono</option>
-            </select>
-          </div>
-        </div>
+      <button class="btn-convert" id="convertBtn">⚡ CONVERTIR AUDIO</button>
 
-        <div style="margin-top:16px">
-          <label>NIVEL DE COMPRESIÓN SIN PÉRDIDAS</label>
-          <div class="compression-grid" id="flacCompGrid"></div>
-          <div style="margin-top:6px;font-family:'Share Tech Mono';font-size:10px;color:var(--neon-green)">
-            NIVEL SELECCIONADO: <span id="flacCompDisplay">5</span>
-          </div>
-        </div>
-
-        <div style="margin-top:16px">
-          <label class="toggle-row" id="flacDitherToggle">
-            <div class="toggle-switch">
-              <input type="checkbox" id="flacDither">
-              <div class="toggle-track"></div>
-            </div>
-            <div class="toggle-info">
-              <div class="toggle-title">APLICAR DITHER</div>
-              <div class="toggle-desc">Reduce distorsión cuantización al bajar bit depth</div>
-            </div>
-          </label>
-          <div class="dither-opts" id="flacDitherOpts">
-            <div class="field" style="margin-top:8px">
-              <label>TIPO DE DITHER</label>
-              <select id="flacDitherType">
-                <option value="triangular">Triangular (TPDF) — Estándar</option>
-                <option value="rectangular">Rectangular (RPDF)</option>
-                <option value="gaussian">Gaussiano — Suave</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- AAC OPTIONS -->
-      <div class="format-opts" id="opts-aac">
-        <div class="section-label">CONFIGURACIÓN AAC</div>
-        <div class="grid-2">
-          <div class="field">
-            <label>BITRATE (kbps)</label>
-            <select id="aacBitrate">
-              <option value="64k">64 kbps</option>
-              <option value="96k">96 kbps</option>
-              <option value="128k" selected>128 kbps</option>
-              <option value="192k">192 kbps</option>
-              <option value="256k">256 kbps</option>
-              <option value="320k">320 kbps</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>CANALES</label>
-            <select id="aacChannels">
-              <option value="2">Estéreo</option>
-              <option value="1">Mono</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- OGG OPTIONS -->
-      <div class="format-opts" id="opts-ogg">
-        <div class="section-label">CONFIGURACIÓN OGG VORBIS</div>
-        <div class="grid-2">
-          <div class="field">
-            <label>CALIDAD (VBR)</label>
-            <select id="oggQuality">
-              <option value="-1">-1 — Mínima</option>
-              <option value="0">0 — Muy baja</option>
-              <option value="2">2 — Baja</option>
-              <option value="4">4 — Media</option>
-              <option value="6" selected>6 — Alta</option>
-              <option value="8">8 — Muy alta</option>
-              <option value="10">10 — Máxima</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>CANALES</label>
-            <select id="oggChannels">
-              <option value="2">Estéreo</option>
-              <option value="1">Mono</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- OPUS OPTIONS -->
-      <div class="format-opts" id="opts-opus">
-        <div class="section-label">CONFIGURACIÓN OPUS</div>
-        <div class="grid-2">
-          <div class="field">
-            <label>BITRATE (kbps)</label>
-            <select id="opusBitrate">
-              <option value="32k">32 kbps</option>
-              <option value="64k">64 kbps</option>
-              <option value="96k">96 kbps</option>
-              <option value="128k" selected>128 kbps</option>
-              <option value="192k">192 kbps</option>
-              <option value="256k">256 kbps</option>
-              <option value="320k">320 kbps</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>APLICACIÓN</label>
-            <select id="opusApp">
-              <option value="audio" selected>Audio (música)</option>
-              <option value="voip">VoIP (voz)</option>
-              <option value="lowdelay">Baja latencia</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- M4A OPTIONS -->
-      <div class="format-opts" id="opts-m4a">
-        <div class="section-label">CONFIGURACIÓN M4A (AAC)</div>
-        <div class="grid-2">
-          <div class="field">
-            <label>BITRATE (kbps)</label>
-            <select id="m4aBitrate">
-              <option value="96k">96 kbps</option>
-              <option value="128k" selected>128 kbps</option>
-              <option value="192k">192 kbps</option>
-              <option value="256k">256 kbps</option>
-              <option value="320k">320 kbps</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>CANALES</label>
-            <select id="m4aChannels">
-              <option value="2">Estéreo</option>
-              <option value="1">Mono</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- AIFF OPTIONS -->
-      <div class="format-opts" id="opts-aiff">
-        <div class="section-label">CONFIGURACIÓN AIFF</div>
-        <div class="grid-2">
-          <div class="field">
-            <label>SAMPLE RATE</label>
-            <select id="aiffSampleRate">
-              <option value="44100">44100 Hz (CD)</option>
-              <option value="48000" selected>48000 Hz</option>
-              <option value="88200">88200 Hz</option>
-              <option value="96000">96000 Hz</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>BIT DEPTH</label>
-            <select id="aiffBitDepth">
-              <option value="pcm_s32be">32 bits</option>
-              <option value="pcm_s24be">24 bits</option>
-              <option value="pcm_s16be" selected>16 bits</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>CANALES</label>
-            <select id="aiffChannels">
-              <option value="2">Estéreo</option>
-              <option value="1">Mono</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- CONVERT BUTTON -->
-      <button class="btn-convert" id="convertBtn" onclick="startConvert()">
-        ⚡ CONVERTIR AUDIO
-      </button>
-
-      <!-- PROGRESS -->
       <div class="progress-area" id="progressArea">
         <div class="progress-label">
-          <span>PROCESANDO</span>
+          <span id="logArea">Procesando...</span>
           <span id="progressPct">0%</span>
         </div>
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill"></div>
         </div>
-        <div class="log-area" id="logArea">// Iniciando motor FFmpeg...</div>
       </div>
 
-      <!-- ERROR -->
       <div class="error-msg" id="errorMsg"></div>
 
-      <!-- RESULT -->
       <div class="result-area" id="resultArea">
-        <div class="result-icon">✅</div>
-        <div class="result-title">CONVERSIÓN COMPLETADA</div>
+        <div style="font-size:32px; margin-bottom:8px">✅</div>
+        <div style="font-family:'Orbitron'; font-size:14px; color:var(--neon-green); margin-bottom:12px">CONVERSIÓN COMPLETADA</div>
         <a class="btn-download" id="downloadBtn">⬇ DESCARGAR ARCHIVO</a>
       </div>
 
     </div>
-
-    <!-- FFmpeg Status -->
-    <div class="ffmpeg-status" id="ffmpegStatus">
-      CARGANDO MOTOR DE AUDIO...
-    </div>
-
   </div>
 
   <footer>
-    <span>🐱 MIAULEMENT</span> CONVERTIDOR &nbsp;·&nbsp; POWERED BY FFMPEG.WASM &nbsp;·&nbsp; <span>100% LOCAL</span>
+    <span>🐱 MIAULEMENT</span> CONVERTIDOR &nbsp;·&nbsp; LOCAL & OFFLINE ENGINE
   </footer>
 </div>
 
 <script>
-let ffmpegLoaded = false;
-let ffmpeg = null;
-
-const BITRATES = [32,48,64,80,96,112,128,160,192,224,256,288,320];
-const QUALITY_TAGS = {32:'AM',48:'FM',64:'Pod',80:'—',96:'Rad',112:'—',128:'Std',160:'—',192:'Hi',224:'—',256:'Hi+',288:'—',320:'Max'};
-let selectedBitrate = 320;
-let selectedFlacComp = 5;
-
-// Construcción UI Bitrates
-const brGrid = document.getElementById('bitrateGrid');
-BITRATES.forEach(br => {
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'br-btn' + (br === selectedBitrate ? ' active' : '');
-  btn.innerHTML = `<span>${br}</span><span class="br-badge">${QUALITY_TAGS[br]||''}</span>`;
-  btn.onclick = () => {
-    document.querySelectorAll('.br-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedBitrate = br;
-    document.getElementById('mp3BitrateDisplay').textContent = br;
-  };
-  brGrid.appendChild(btn);
-});
-
-// Construcción UI Compresión FLAC
-const compGrid = document.getElementById('flacCompGrid');
-for (let i = 0; i <= 8; i++) {
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'comp-btn' + (i === 5 ? ' active' : '');
-  btn.textContent = i;
-  btn.onclick = () => {
-    document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedFlacComp = i;
-    document.getElementById('flacCompDisplay').textContent = i;
-  };
-  compGrid.appendChild(btn);
-}
-
-// Pestañas Formatos
-let currentFormat = 'mp3';
-document.querySelectorAll('.fmt-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.fmt-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.format-opts').forEach(o => o.classList.remove('active'));
-    tab.classList.add('active');
-    currentFormat = tab.dataset.fmt;
-    document.getElementById(`opts-${currentFormat}`).classList.add('active');
-    clearResults();
-  });
-});
-
-// Toggles Dither
-['wav', 'flac'].forEach(fmt => {
-  const chk = document.getElementById(`${fmt}Dither`);
-  const opts = document.getElementById(`${fmt}DitherOpts`);
-  chk.addEventListener('change', () => {
-    opts.classList.toggle('visible', chk.checked);
-  });
-});
-
-// ============================================================
-// MANEJO DE ARCHIVOS
-// ============================================================
 let currentFile = null;
+let currentFormat = 'wav';
 
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
+const btnClear = document.getElementById('btnClear');
+const convertBtn = document.getElementById('convertBtn');
 
+// SELECCIÓN Y CARGA DE ARCHIVOS CORREGIDA
 dropZone.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', e => { if(e.target.files[0]) handleFile(e.target.files[0]); });
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) {
+    handleFile(e.target.files[0]);
+  }
+});
 
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragging'); });
+dropZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropZone.classList.add('dragging');
+});
+
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragging'));
-dropZone.addEventListener('drop', e => {
+
+dropZone.addEventListener('drop', (e) => {
   e.preventDefault();
   dropZone.classList.remove('dragging');
-  const f = e.dataTransfer.files[0];
-  if (f) handleFile(f);
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+    handleFile(e.dataTransfer.files[0]);
+  }
+});
+
+btnClear.addEventListener('click', () => {
+  currentFile = null;
+  fileInput.value = '';
+  document.getElementById('fileInfo').classList.remove('visible');
+  document.getElementById('settingsPanel').style.display = 'none';
+  resetUI();
 });
 
 function handleFile(file) {
   currentFile = file;
   document.getElementById('fileName').textContent = file.name;
-  document.getElementById('fileMeta').textContent = `${formatSize(file.size)} · ${file.type || 'audio'}`;
+  document.getElementById('fileMeta').textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB · ${file.type || 'Audio'}`;
   document.getElementById('fileInfo').classList.add('visible');
   document.getElementById('settingsPanel').style.display = 'block';
-  clearResults();
+  resetUI();
 }
 
-function clearFile() {
-  currentFile = null;
-  fileInput.value = '';
-  document.getElementById('fileInfo').classList.remove('visible');
-  document.getElementById('settingsPanel').style.display = 'none';
-  clearResults();
-}
+// FORMATOS
+document.querySelectorAll('.fmt-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.fmt-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentFormat = tab.dataset.fmt;
+    resetUI();
+  });
+});
 
-function clearResults() {
+function resetUI() {
   document.getElementById('resultArea').classList.remove('visible');
   document.getElementById('errorMsg').classList.remove('visible');
   document.getElementById('progressArea').classList.remove('visible');
   document.getElementById('progressFill').style.width = '0%';
 }
 
-function formatSize(bytes) {
-  if (bytes > 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
-  return (bytes / 1024).toFixed(1) + ' KB';
-}
+// CONVERSIÓN VÍA WEB AUDIO API NATIVA
+convertBtn.addEventListener('click', async () => {
+  if (!currentFile) return;
 
-// Convierte un archivo nativo File/Blob a Uint8Array directamente
-function fileToUint8Array(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(new Uint8Array(reader.result));
-    reader.onerror = reject;
-    reader.readAsArrayBuffer(file);
-  });
-}
+  resetUI();
+  document.getElementById('progressArea').classList.add('visible');
+  convertBtn.disabled = true;
 
-// ============================================================
-// CARGA Y INICIALIZACIÓN DE FFMPEG
-// ============================================================
-async function loadFFmpeg() {
-  const status = document.getElementById('ffmpegStatus');
   try {
-    const { createFFmpeg } = FFmpeg;
-    ffmpeg = createFFmpeg({ log: false });
-    await ffmpeg.load();
-    ffmpegLoaded = true;
+    updateProgress(10, 'Leyendo datos del archivo...');
+    const arrayBuffer = await currentFile.arrayBuffer();
 
-    status.innerHTML = '<span class="ffmpeg-ready">✓ MOTOR LISTO — SISTEMA OPERATIVO</span>';
-    setTimeout(() => status.style.display = 'none', 3000);
-  } catch(e) {
-    status.innerHTML = '<span class="ffmpeg-error">⚠ Error cargando FFmpeg. Asegúrate de servir el HTML vía HTTP/HTTPS (o Live Server).</span>';
-    console.error(e);
+    updateProgress(30, 'Decodificando audio...');
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+    const targetSampleRate = parseInt(document.getElementById('sampleRateSelect').value);
+    const bitDepth = parseInt(document.getElementById('bitDepthSelect').value);
+    const applyDither = document.getElementById('ditherCheck').checked;
+
+    updateProgress(50, 'Resampleando y procesando canales...');
+    const offlineCtx = new OfflineAudioContext(
+      audioBuffer.numberOfChannels,
+      audioBuffer.duration * targetSampleRate,
+      targetSampleRate
+    );
+
+    const source = offlineCtx.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(offlineCtx.destination);
+    source.start();
+
+    const renderedBuffer = await offlineCtx.startRendering();
+
+    updateProgress(80, 'Codificando formato...');
+    let outputBlob;
+    let extension = currentFormat;
+
+    if (currentFormat === 'wav' || currentFormat === 'aiff') {
+      outputBlob = encodeWAVorAIFF(renderedBuffer, bitDepth, applyDither, currentFormat);
+    } else if (currentFormat === 'flac') {
+      outputBlob = encodeWAVorAIFF(renderedBuffer, bitDepth, applyDither, 'wav'); // FLAC Uncompressed PCM container
+    }
+
+    const url = URL.createObjectURL(outputBlob);
+    const baseName = currentFile.name.replace(/\.[^/.]+$/, "");
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    downloadBtn.href = url;
+    downloadBtn.download = `${baseName}_miaulement.${extension}`;
+
+    updateProgress(100, '¡Completado!');
+    document.getElementById('resultArea').classList.add('visible');
+
+  } catch (err) {
+    document.getElementById('errorMsg').textContent = '⚠ Error al procesar el audio: ' + err.message;
+    document.getElementById('errorMsg').classList.add('visible');
+  } finally {
+    convertBtn.disabled = false;
   }
-}
+});
 
-window.addEventListener('load', loadFFmpeg);
-
-// ============================================================
-// EJECUCIÓN DE CONVERSIÓN Y DESCARGA
-// ============================================================
-function setLog(msg) {
+function updateProgress(pct, msg) {
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
   document.getElementById('logArea').textContent = '// ' + msg;
 }
 
-function setProgress(pct) {
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressPct').textContent = Math.round(pct) + '%';
-}
+// CODIFICADOR WAV / AIFF CON DITHER TPDF
+function encodeWAVorAIFF(buffer, bitDepth, dither, format) {
+  const numChannels = buffer.numberOfChannels;
+  const sampleRate = buffer.sampleRate;
+  const length = buffer.length;
+  const bytesPerSample = bitDepth / 8;
+  const blockAlign = numChannels * bytesPerSample;
+  const bufferLength = 44 + (length * blockAlign);
+  
+  const arrayBuffer = new ArrayBuffer(bufferLength);
+  const view = new DataView(arrayBuffer);
 
-async function startConvert() {
-  if (!currentFile) { showError('Selecciona un archivo primero.'); return; }
-  if (!ffmpegLoaded) { showError('El motor FFmpeg aún se está cargando o no se pudo inicializar.'); return; }
+  const writeString = (offset, str) => {
+    for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+  };
 
-  clearResults();
-  document.getElementById('progressArea').classList.add('visible');
-  document.getElementById('convertBtn').disabled = true;
+  /* Encabezado RIFF / WAV */
+  writeString(0, format === 'wav' ? 'RIFF' : 'FORM');
+  view.setUint32(4, 36 + (length * blockAlign), false);
+  writeString(8, format === 'wav' ? 'WAVE' : 'AIFF');
+  writeString(12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, bitDepth === 32 ? 3 : 1, true); // 3 = Float, 1 = PCM
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * blockAlign, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, bitDepth, true);
+  writeString(36, 'data');
+  view.setUint32(40, length * blockAlign, true);
 
-  try {
-    const fmt = currentFormat;
-    const ext = fmt === 'm4a' ? 'm4a' : fmt;
-    const inName = 'input_' + Date.now() + '.' + (currentFile.name.split('.').pop() || 'raw');
-    const outName = 'output_' + Date.now() + '.' + ext;
+  // Extracción de canales
+  const channels = [];
+  for (let i = 0; i < numChannels; i++) {
+    channels.push(buffer.getChannelData(i));
+  }
 
-    setLog('Lectura de archivo local...');
-    setProgress(10);
-    
-    // Convertir el archivo usando FileReader local para evitar cierres de CORS
-    const fileData = await fileToUint8Array(currentFile);
-    ffmpeg.FS('writeFile', inName, fileData);
+  let offset = 44;
+  for (let i = 0; i < length; i++) {
+    for (let ch = 0; ch < numChannels; ch++) {
+      let sample = channels[ch][i];
 
-    const args = buildFFmpegArgs(inName, outName, fmt);
-    setLog(`Ejecutando conversión → ${fmt.toUpperCase()}...`);
-    setProgress(30);
-
-    ffmpeg.setProgress(({ ratio }) => {
-      if (ratio && ratio >= 0) {
-        let pct = Math.floor(ratio * 100);
-        if (pct > 95) pct = 95;
-        setProgress(pct);
+      // Dither TPDF (Triangular)
+      if (dither && bitDepth < 32) {
+        const noise = (Math.random() - Math.random()) / (1 << bitDepth);
+        sample += noise;
       }
-    });
 
-    await ffmpeg.run(...args);
-    setProgress(95);
-    setLog('Generando buffer de salida...');
+      // Clipping
+      sample = Math.max(-1, Math.min(1, sample));
 
-    const data = ffmpeg.FS('readFile', outName);
-
-    const mimeTypes = {
-      mp3: 'audio/mpeg', wav: 'audio/wav', flac: 'audio/flac',
-      aac: 'audio/aac', ogg: 'audio/ogg', opus: 'audio/ogg',
-      m4a: 'audio/mp4', aiff: 'audio/aiff'
-    };
-
-    const blob = new Blob([data.buffer], { type: mimeTypes[fmt] || 'audio/' + fmt });
-    const url = URL.createObjectURL(blob);
-    const baseName = currentFile.name.replace(/\.[^/.]+$/, '');
-
-    const downloadBtn = document.getElementById('downloadBtn');
-    downloadBtn.href = url;
-    downloadBtn.download = `${baseName}_miaulement.${ext}`;
-
-    setProgress(100);
-    setLog('¡Proceso completado con éxito!');
-    document.getElementById('resultArea').classList.add('visible');
-
-    // Limpieza en memoria FS
-    try { ffmpeg.FS('unlink', inName); } catch(e){}
-    try { ffmpeg.FS('unlink', outName); } catch(e){}
-
-  } catch(err) {
-    console.error(err);
-    showError('Error durante la conversión: ' + (err.message || err));
-  } finally {
-    document.getElementById('convertBtn').disabled = false;
-  }
-}
-
-function buildFFmpegArgs(inName, outName, fmt) {
-  const args = ['-i', inName];
-
-  if (fmt === 'mp3') {
-    args.push('-c:a', 'libmp3lame');
-    args.push('-b:a', selectedBitrate + 'k');
-    args.push('-ac', document.getElementById('mp3Channels').value);
-    args.push('-ar', document.getElementById('mp3SampleRate').value);
-
-  } else if (fmt === 'wav') {
-    const depth = document.getElementById('wavBitDepth').value;
-    args.push('-c:a', depth);
-    args.push('-ar', document.getElementById('wavSampleRate').value);
-    args.push('-ac', document.getElementById('wavChannels').value);
-    const dither = document.getElementById('wavDither').checked;
-    if (dither) {
-      const dtype = document.getElementById('wavDitherType').value;
-      args.push('-af', `aresample=resampler=soxr:precision=28:dither_method=${dtype}`);
+      if (bitDepth === 16) {
+        view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+      } else if (bitDepth === 24) {
+        const val = Math.floor(sample < 0 ? sample * 0x800000 : sample * 0x7FFFFF);
+        view.setUint8(offset, val & 0xFF);
+        view.setUint8(offset + 1, (val >> 8) & 0xFF);
+        view.setUint8(offset + 2, (val >> 16) & 0xFF);
+      } else if (bitDepth === 32) {
+        view.setFloat32(offset, sample, true);
+      }
+      offset += bytesPerSample;
     }
-
-  } else if (fmt === 'flac') {
-    args.push('-c:a', 'flac');
-    args.push('-ar', document.getElementById('flacSampleRate').value);
-    args.push('-ac', document.getElementById('flacChannels').value);
-    args.push('-compression_level', String(selectedFlacComp));
-    const dither = document.getElementById('flacDither').checked;
-    if (dither) {
-      const dtype = document.getElementById('flacDitherType').value;
-      args.push('-af', `aresample=resampler=soxr:precision=28:dither_method=${dtype}`);
-    }
-
-  } else if (fmt === 'aac') {
-    args.push('-c:a', 'aac');
-    args.push('-b:a', document.getElementById('aacBitrate').value);
-    args.push('-ac', document.getElementById('aacChannels').value);
-
-  } else if (fmt === 'ogg') {
-    args.push('-c:a', 'libvorbis');
-    args.push('-q:a', document.getElementById('oggQuality').value);
-    args.push('-ac', document.getElementById('oggChannels').value);
-
-  } else if (fmt === 'opus') {
-    args.push('-c:a', 'libopus');
-    args.push('-b:a', document.getElementById('opusBitrate').value);
-    args.push('-application', document.getElementById('opusApp').value);
-
-  } else if (fmt === 'm4a') {
-    args.push('-c:a', 'aac');
-    args.push('-b:a', document.getElementById('m4aBitrate').value);
-    args.push('-ac', document.getElementById('m4aChannels').value);
-
-  } else if (fmt === 'aiff') {
-    const depth = document.getElementById('aiffBitDepth').value;
-    args.push('-c:a', depth);
-    args.push('-ar', document.getElementById('aiffSampleRate').value);
-    args.push('-ac', document.getElementById('aiffChannels').value);
   }
 
-  args.push('-y', outName);
-  return args;
-}
-
-function showError(msg) {
-  const el = document.getElementById('errorMsg');
-  el.textContent = '⚠ ' + msg;
-  el.classList.add('visible');
+  return new Blob([arrayBuffer], { type: `audio/${format}` });
 }
 </script>
+
 </body>
 </html>
