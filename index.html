@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Miaulement Convertidor</title>
+
+<!-- Carga directa de scripts de FFmpeg v0.11.6 -->
+<script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap');
 
@@ -32,7 +36,6 @@
     position: relative;
   }
 
-  /* Animated grid background */
   body::before {
     content: '';
     position: fixed;
@@ -70,7 +73,6 @@
     padding: 20px;
   }
 
-  /* HEADER */
   header {
     text-align: center;
     padding: 40px 0 30px;
@@ -100,8 +102,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer 4s linear infinite;
-    text-shadow: none;
+    animation: shimmer 4s linear infinite, glitch 15s ease-in-out infinite;
   }
 
   @keyframes shimmer {
@@ -140,7 +141,6 @@
     padding: 0 8px;
   }
 
-  /* MAIN CARD */
   .main-card {
     background: var(--bg-card);
     border: 1px solid var(--border-glow);
@@ -148,9 +148,8 @@
     padding: 32px;
     position: relative;
     margin-bottom: 20px;
-    box-shadow:
-      0 0 30px rgba(0,245,255,0.05),
-      inset 0 0 30px rgba(0,0,0,0.5);
+    box-shadow: 0 0 30px rgba(0,245,255,0.05), inset 0 0 30px rgba(0,0,0,0.5);
+    animation: flicker 12s infinite;
   }
 
   .main-card::before {
@@ -170,7 +169,6 @@
     letter-spacing: 2px;
   }
 
-  /* DROP ZONE */
   .drop-zone {
     border: 2px dashed rgba(0,245,255,0.25);
     border-radius: 4px;
@@ -248,7 +246,6 @@
 
   #fileInput { display: none; }
 
-  /* FILE INFO */
   .file-info {
     display: none;
     background: rgba(0,245,255,0.05);
@@ -261,9 +258,7 @@
   }
 
   .file-info.visible { display: flex; }
-
   .file-icon { font-size: 28px; }
-
   .file-details { flex: 1; }
 
   .file-name {
@@ -299,10 +294,7 @@
     box-shadow: 0 0 10px rgba(255,0,170,0.3);
   }
 
-  /* SETTINGS PANEL */
-  .settings-panel {
-    margin-top: 24px;
-  }
+  .settings-panel { margin-top: 24px; }
 
   .section-label {
     font-family: 'Orbitron', sans-serif;
@@ -324,14 +316,12 @@
   }
 
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 
   @media (max-width: 600px) {
-    .grid-2, .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
     .main-card { padding: 20px 16px; }
   }
 
-  /* FIELD */
   .field { display: flex; flex-direction: column; gap: 6px; }
 
   label {
@@ -342,7 +332,7 @@
     text-transform: uppercase;
   }
 
-  select, input[type="range"] {
+  select {
     width: 100%;
     background: var(--bg-panel);
     border: 1px solid rgba(0,245,255,0.2);
@@ -351,18 +341,9 @@
     font-family: 'Share Tech Mono', monospace;
     font-size: 13px;
     padding: 8px 12px;
-    appearance: none;
-    -webkit-appearance: none;
     outline: none;
     transition: all 0.2s;
     cursor: pointer;
-  }
-
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300f5ff'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 32px;
   }
 
   select:focus, select:hover {
@@ -370,18 +351,9 @@
     box-shadow: 0 0 12px rgba(0,245,255,0.15);
   }
 
-  select option {
-    background: #0a1520;
-    color: var(--text-main);
-  }
+  select option { background: #0a1520; color: var(--text-main); }
 
-  /* FORMAT TABS */
-  .format-tabs {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
+  .format-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
 
   .fmt-tab {
     flex: 1;
@@ -399,72 +371,19 @@
     text-align: center;
   }
 
-  .fmt-tab:hover {
-    border-color: rgba(0,245,255,0.4);
-    color: var(--neon-cyan);
-  }
+  .fmt-tab:hover { border-color: rgba(0,245,255,0.4); color: var(--neon-cyan); }
 
   .fmt-tab.active {
     border-color: var(--neon-cyan);
     background: rgba(0,245,255,0.08);
     color: var(--neon-cyan);
-    box-shadow: 0 0 12px rgba(0,245,255,0.2), inset 0 0 8px rgba(0,245,255,0.05);
+    box-shadow: 0 0 12px rgba(0,245,255,0.2);
     text-shadow: 0 0 8px var(--neon-cyan);
   }
 
-  /* FORMAT OPTIONS */
-  .format-opts { display: none; animation: fadeIn 0.3s ease; }
+  .format-opts { display: none; }
   .format-opts.active { display: block; }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* RANGE SLIDER */
-  .range-wrapper { position: relative; }
-
-  input[type="range"] {
-    padding: 0;
-    height: 6px;
-    border-radius: 3px;
-    background: linear-gradient(90deg, var(--neon-cyan) var(--pct, 0%), rgba(0,245,255,0.1) var(--pct, 0%));
-    border: none;
-    cursor: pointer;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: var(--bg-dark);
-    border: 2px solid var(--neon-cyan);
-    box-shadow: 0 0 8px var(--neon-cyan);
-    cursor: pointer;
-    transition: transform 0.15s;
-  }
-
-  input[type="range"]:hover::-webkit-slider-thumb {
-    transform: scale(1.2);
-    box-shadow: 0 0 16px var(--neon-cyan);
-  }
-
-  .range-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 4px;
-  }
-
-  .range-val {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 6px rgba(0,245,255,0.5);
-    text-align: right;
-    margin-top: 4px;
-  }
-
-  /* TOGGLE */
   .toggle-row {
     display: flex;
     align-items: center;
@@ -474,20 +393,9 @@
     border-radius: 4px;
     background: rgba(0,245,255,0.02);
     cursor: pointer;
-    transition: all 0.2s;
   }
 
-  .toggle-row:hover {
-    border-color: rgba(0,245,255,0.3);
-    background: rgba(0,245,255,0.05);
-  }
-
-  .toggle-switch {
-    position: relative;
-    width: 44px; height: 22px;
-    flex-shrink: 0;
-  }
-
+  .toggle-switch { position: relative; width: 44px; height: 22px; flex-shrink: 0; }
   .toggle-switch input { opacity: 0; width: 0; height: 0; }
 
   .toggle-track {
@@ -496,7 +404,6 @@
     background: rgba(0,245,255,0.1);
     border: 1px solid rgba(0,245,255,0.3);
     border-radius: 22px;
-    transition: all 0.3s;
     cursor: pointer;
   }
 
@@ -510,50 +417,19 @@
     transition: all 0.3s;
   }
 
-  .toggle-switch input:checked + .toggle-track {
-    background: rgba(0,245,255,0.2);
-    border-color: var(--neon-cyan);
-    box-shadow: 0 0 10px rgba(0,245,255,0.3);
-  }
-
   .toggle-switch input:checked + .toggle-track::before {
     left: calc(100% - 17px);
     background: var(--neon-cyan);
-    box-shadow: 0 0 6px var(--neon-cyan);
   }
 
   .toggle-info { flex: 1; }
+  .toggle-title { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text-main); }
+  .toggle-desc { font-size: 10px; color: var(--text-dim); font-family: 'Share Tech Mono', monospace; }
 
-  .toggle-title {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    color: var(--text-main);
-    letter-spacing: 1px;
-  }
-
-  .toggle-desc {
-    font-size: 10px;
-    color: var(--text-dim);
-    margin-top: 2px;
-    font-family: 'Share Tech Mono', monospace;
-  }
-
-  /* DITHER SELECT */
-  .dither-opts {
-    display: none;
-    margin-top: 12px;
-    animation: fadeIn 0.3s ease;
-  }
-
+  .dither-opts { display: none; margin-top: 12px; }
   .dither-opts.visible { display: block; }
 
-  /* COMPRESSION BAR */
-  .compression-grid {
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
-    gap: 4px;
-    margin-top: 6px;
-  }
+  .compression-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 4px; margin-top: 6px; }
 
   .comp-btn {
     aspect-ratio: 1;
@@ -567,29 +443,15 @@
     font-family: 'Orbitron', monospace;
     font-size: 11px;
     cursor: pointer;
-    transition: all 0.15s;
-    padding: 8px 4px;
-  }
-
-  .comp-btn:hover {
-    border-color: rgba(0,255,136,0.5);
-    color: var(--neon-green);
   }
 
   .comp-btn.active {
     background: rgba(0,255,136,0.12);
     border-color: var(--neon-green);
     color: var(--neon-green);
-    box-shadow: 0 0 8px rgba(0,255,136,0.2);
-    text-shadow: 0 0 6px var(--neon-green);
   }
 
-  /* BITRATE SELECTOR */
-  .bitrate-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-  }
+  .bitrate-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 
   .br-btn {
     padding: 9px 4px;
@@ -601,28 +463,16 @@
     font-family: 'Share Tech Mono', monospace;
     font-size: 11px;
     cursor: pointer;
-    transition: all 0.15s;
   }
-
-  .br-btn:hover { border-color: rgba(255,238,0,0.4); color: var(--neon-yellow); }
 
   .br-btn.active {
     background: rgba(255,238,0,0.08);
     border-color: var(--neon-yellow);
     color: var(--neon-yellow);
-    box-shadow: 0 0 8px rgba(255,238,0,0.2);
-    text-shadow: 0 0 6px var(--neon-yellow);
   }
 
-  .br-badge {
-    display: block;
-    font-size: 8px;
-    color: var(--text-dim);
-    margin-top: 2px;
-    letter-spacing: 0.5px;
-  }
+  .br-badge { display: block; font-size: 8px; color: var(--text-dim); margin-top: 2px; }
 
-  /* CONVERT BUTTON */
   .btn-convert {
     width: 100%;
     padding: 18px;
@@ -636,27 +486,13 @@
     font-weight: 700;
     letter-spacing: 4px;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
     transition: all 0.3s;
     text-shadow: 0 0 10px rgba(0,245,255,0.5);
-    box-shadow: 0 0 20px rgba(0,245,255,0.1);
   }
-
-  .btn-convert::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.08), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s;
-  }
-
-  .btn-convert:hover::before { transform: translateX(100%); }
 
   .btn-convert:hover {
     background: rgba(0,245,255,0.08);
-    box-shadow: 0 0 40px rgba(0,245,255,0.25), inset 0 0 20px rgba(0,245,255,0.05);
+    box-shadow: 0 0 40px rgba(0,245,255,0.25);
   }
 
   .btn-convert:disabled {
@@ -664,19 +500,9 @@
     cursor: not-allowed;
     border-color: var(--text-dim);
     color: var(--text-dim);
-    text-shadow: none;
-    box-shadow: none;
   }
 
-  .btn-convert:disabled:hover { background: transparent; }
-  .btn-convert:disabled::before { display: none; }
-
-  /* PROGRESS */
-  .progress-area {
-    display: none;
-    margin-top: 20px;
-  }
-
+  .progress-area { display: none; margin-top: 20px; }
   .progress-area.visible { display: block; }
 
   .progress-label {
@@ -700,26 +526,8 @@
   .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
-    border-radius: 3px;
     width: 0%;
     transition: width 0.3s ease;
-    box-shadow: 0 0 10px rgba(0,245,255,0.5);
-    position: relative;
-  }
-
-  .progress-fill::after {
-    content: '';
-    position: absolute;
-    right: 0; top: 0; bottom: 0;
-    width: 30px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
-    animation: progressShine 1s ease-in-out infinite;
-  }
-
-  @keyframes progressShine {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
   }
 
   .log-area {
@@ -729,10 +537,8 @@
     color: var(--neon-green);
     letter-spacing: 1px;
     min-height: 16px;
-    text-shadow: 0 0 6px rgba(0,255,136,0.4);
   }
 
-  /* RESULT */
   .result-area {
     display: none;
     margin-top: 20px;
@@ -741,11 +547,9 @@
     border-radius: 4px;
     background: rgba(0,255,136,0.04);
     text-align: center;
-    animation: fadeIn 0.5s ease;
   }
 
   .result-area.visible { display: block; }
-
   .result-icon { font-size: 36px; margin-bottom: 8px; }
 
   .result-title {
@@ -753,7 +557,6 @@
     font-size: 14px;
     color: var(--neon-green);
     letter-spacing: 2px;
-    text-shadow: 0 0 10px var(--neon-green);
     margin-bottom: 14px;
   }
 
@@ -770,8 +573,6 @@
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s;
-    text-shadow: 0 0 8px rgba(0,255,136,0.5);
-    box-shadow: 0 0 15px rgba(0,255,136,0.1);
   }
 
   .btn-download:hover {
@@ -779,7 +580,6 @@
     box-shadow: 0 0 25px rgba(0,255,136,0.25);
   }
 
-  /* ERROR */
   .error-msg {
     display: none;
     margin-top: 16px;
@@ -790,12 +590,10 @@
     font-family: 'Share Tech Mono', monospace;
     font-size: 12px;
     color: var(--neon-pink);
-    text-shadow: 0 0 8px rgba(255,0,170,0.4);
   }
 
   .error-msg.visible { display: block; }
 
-  /* FOOTER */
   footer {
     text-align: center;
     padding: 24px 0;
@@ -809,32 +607,14 @@
 
   footer span { color: var(--neon-pink); }
 
-  /* Scan line effect */
   .scanlines {
     position: fixed;
     inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
     pointer-events: none;
     z-index: 999;
   }
 
-  /* Flicker animation */
-  @keyframes flicker {
-    0%, 96%, 100% { opacity: 1; }
-    97% { opacity: 0.95; }
-    98% { opacity: 1; }
-    99% { opacity: 0.97; }
-  }
-
-  .main-card { animation: flicker 12s infinite; }
-
-  /* Loading ffmpeg */
   .ffmpeg-status {
     font-family: 'Share Tech Mono', monospace;
     font-size: 10px;
@@ -848,48 +628,8 @@
     gap: 8px;
   }
 
-  .dot-pulse {
-    display: inline-flex;
-    gap: 4px;
-  }
-
-  .dot-pulse span {
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: var(--neon-cyan);
-    animation: pulse 1.2s ease-in-out infinite;
-  }
-
-  .dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
-  .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes pulse {
-    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-    40% { transform: scale(1); opacity: 1; }
-  }
-
-  .ffmpeg-ready { color: var(--neon-green); text-shadow: 0 0 6px rgba(0,255,136,0.4); }
+  .ffmpeg-ready { color: var(--neon-green); }
   .ffmpeg-error { color: var(--neon-pink); }
-
-  /* Glitch text effect on title */
-  @keyframes glitch {
-    0%, 100% { clip-path: none; transform: none; }
-    92% { clip-path: none; transform: none; }
-    93% { clip-path: inset(10% 0 80% 0); transform: translate(-3px, 0); }
-    94% { clip-path: inset(60% 0 20% 0); transform: translate(3px, 0); }
-    95% { clip-path: none; transform: none; }
-  }
-
-  h1 { animation: shimmer 4s linear infinite, glitch 15s ease-in-out infinite; }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg-dark); }
-  ::-webkit-scrollbar-thumb { background: rgba(0,245,255,0.3); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(0,245,255,0.5); }
-
-  .ogg-quality { display: none; }
-  .ogg-quality.show { display: block; }
 </style>
 </head>
 <body>
@@ -934,7 +674,7 @@
       <button class="btn-clear" onclick="clearFile()">✕ LIMPIAR</button>
     </div>
 
-    <!-- SETTINGS -->
+    <!-- SETTINGS PANEL -->
     <div class="settings-panel" id="settingsPanel" style="display:none">
 
       <div class="section-label">FORMATO DE SALIDA</div>
@@ -1011,7 +751,6 @@
           </div>
         </div>
 
-        <!-- DITHER WAV -->
         <div style="margin-top:16px">
           <label class="toggle-row" id="wavDitherToggle">
             <div class="toggle-switch">
@@ -1054,9 +793,9 @@
           <div class="field">
             <label>BIT DEPTH</label>
             <select id="flacBitDepth">
-              <option value="pcm_s32le">32 bits</option>
-              <option value="pcm_s24le">24 bits</option>
-              <option value="pcm_s16le" selected>16 bits (CD)</option>
+              <option value="s32">32 bits</option>
+              <option value="s24le">24 bits</option>
+              <option value="s16" selected>16 bits (CD)</option>
             </select>
           </div>
           <div class="field">
@@ -1068,19 +807,14 @@
           </div>
         </div>
 
-        <!-- COMPRESSION LEVEL -->
         <div style="margin-top:16px">
           <label>NIVEL DE COMPRESIÓN SIN PÉRDIDAS</label>
-          <div style="margin-top:4px;font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);margin-bottom:8px">
-            Nivel 0 = más rápido · Nivel 8 = mayor compresión (sin pérdida de calidad)
-          </div>
           <div class="compression-grid" id="flacCompGrid"></div>
-          <div style="margin-top:6px;font-family:'Share Tech Mono';font-size:10px;color:var(--neon-green);text-shadow:0 0 6px rgba(0,255,136,0.4)">
+          <div style="margin-top:6px;font-family:'Share Tech Mono';font-size:10px;color:var(--neon-green)">
             NIVEL SELECCIONADO: <span id="flacCompDisplay">5</span>
           </div>
         </div>
 
-        <!-- DITHER FLAC -->
         <div style="margin-top:16px">
           <label class="toggle-row" id="flacDitherToggle">
             <div class="toggle-switch">
@@ -1265,25 +999,21 @@
         <a class="btn-download" id="downloadBtn">⬇ DESCARGAR ARCHIVO</a>
       </div>
 
-    </div><!-- /settings-panel -->
+    </div>
 
     <!-- FFmpeg Status -->
     <div class="ffmpeg-status" id="ffmpegStatus">
-      <div class="dot-pulse"><span></span><span></span><span></span></div>
       CARGANDO MOTOR DE AUDIO...
     </div>
 
-  </div><!-- /main-card -->
+  </div>
 
   <footer>
-    <span>🐱 MIAULEMENT</span> CONVERTIDOR &nbsp;·&nbsp; POWERED BY FFMPEG.WASM &nbsp;·&nbsp; <span>100% LOCAL</span> — TUS ARCHIVOS NO SALEN DE TU NAVEGADOR
+    <span>🐱 MIAULEMENT</span> CONVERTIDOR &nbsp;·&nbsp; POWERED BY FFMPEG.WASM &nbsp;·&nbsp; <span>100% LOCAL</span>
   </footer>
 </div>
 
 <script>
-// ============================================================
-// FFMPEG.WASM INTEGRATION
-// ============================================================
 let ffmpegLoaded = false;
 let ffmpeg = null;
 
@@ -1292,10 +1022,11 @@ const QUALITY_TAGS = {32:'AM',48:'FM',64:'Pod',80:'—',96:'Rad',112:'—',128:'
 let selectedBitrate = 320;
 let selectedFlacComp = 5;
 
-// Build bitrate grid
+// Construcción UI Bitrates
 const brGrid = document.getElementById('bitrateGrid');
 BITRATES.forEach(br => {
   const btn = document.createElement('button');
+  btn.type = 'button';
   btn.className = 'br-btn' + (br === selectedBitrate ? ' active' : '');
   btn.innerHTML = `<span>${br}</span><span class="br-badge">${QUALITY_TAGS[br]||''}</span>`;
   btn.onclick = () => {
@@ -1307,10 +1038,11 @@ BITRATES.forEach(br => {
   brGrid.appendChild(btn);
 });
 
-// Build FLAC compression grid
+// Construcción UI Compresión FLAC
 const compGrid = document.getElementById('flacCompGrid');
 for (let i = 0; i <= 8; i++) {
   const btn = document.createElement('button');
+  btn.type = 'button';
   btn.className = 'comp-btn' + (i === 5 ? ' active' : '');
   btn.textContent = i;
   btn.onclick = () => {
@@ -1322,7 +1054,7 @@ for (let i = 0; i <= 8; i++) {
   compGrid.appendChild(btn);
 }
 
-// Format tabs
+// Pestañas Formatos
 let currentFormat = 'mp3';
 document.querySelectorAll('.fmt-tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -1335,7 +1067,7 @@ document.querySelectorAll('.fmt-tab').forEach(tab => {
   });
 });
 
-// Dither toggles
+// Toggles Dither
 ['wav', 'flac'].forEach(fmt => {
   const chk = document.getElementById(`${fmt}Dither`);
   const opts = document.getElementById(`${fmt}DitherOpts`);
@@ -1345,7 +1077,7 @@ document.querySelectorAll('.fmt-tab').forEach(tab => {
 });
 
 // ============================================================
-// FILE HANDLING
+// MANEJO DE ARCHIVOS
 // ============================================================
 let currentFile = null;
 
@@ -1393,35 +1125,39 @@ function formatSize(bytes) {
   return (bytes / 1024).toFixed(1) + ' KB';
 }
 
+// Convierte un archivo nativo File/Blob a Uint8Array directamente
+function fileToUint8Array(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(new Uint8Array(reader.result));
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
 // ============================================================
-// FFMPEG LOADER
+// CARGA Y INICIALIZACIÓN DE FFMPEG
 // ============================================================
 async function loadFFmpeg() {
   const status = document.getElementById('ffmpegStatus');
   try {
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/ffmpeg/0.11.6/ffmpeg.min.js';
-    document.head.appendChild(script);
-    await new Promise((res, rej) => { script.onload = res; script.onerror = rej; });
-
-    const { createFFmpeg, fetchFile } = FFmpeg;
+    const { createFFmpeg } = FFmpeg;
     ffmpeg = createFFmpeg({ log: false });
     await ffmpeg.load();
-    window._fetchFile = fetchFile;
     ffmpegLoaded = true;
 
     status.innerHTML = '<span class="ffmpeg-ready">✓ MOTOR LISTO — SISTEMA OPERATIVO</span>';
     setTimeout(() => status.style.display = 'none', 3000);
   } catch(e) {
-    status.innerHTML = '<span class="ffmpeg-error">⚠ Error cargando FFmpeg. Intenta recargar.</span>';
+    status.innerHTML = '<span class="ffmpeg-error">⚠ Error cargando FFmpeg. Asegúrate de servir el HTML vía HTTP/HTTPS (o Live Server).</span>';
     console.error(e);
   }
 }
 
-loadFFmpeg();
+window.addEventListener('load', loadFFmpeg);
 
 // ============================================================
-// CONVERSION
+// EJECUCIÓN DE CONVERSIÓN Y DESCARGA
 // ============================================================
 function setLog(msg) {
   document.getElementById('logArea').textContent = '// ' + msg;
@@ -1434,43 +1170,42 @@ function setProgress(pct) {
 
 async function startConvert() {
   if (!currentFile) { showError('Selecciona un archivo primero.'); return; }
-  if (!ffmpegLoaded) { showError('El motor FFmpeg aún se está cargando. Espera un momento.'); return; }
+  if (!ffmpegLoaded) { showError('El motor FFmpeg aún se está cargando o no se pudo inicializar.'); return; }
 
   clearResults();
   document.getElementById('progressArea').classList.add('visible');
   document.getElementById('convertBtn').disabled = true;
-  document.getElementById('errorMsg').classList.remove('visible');
 
   try {
     const fmt = currentFormat;
     const ext = fmt === 'm4a' ? 'm4a' : fmt;
-    const inName = 'input.' + (currentFile.name.split('.').pop() || 'audio');
-    const outName = 'output.' + ext;
+    const inName = 'input_' + Date.now() + '.' + (currentFile.name.split('.').pop() || 'raw');
+    const outName = 'output_' + Date.now() + '.' + ext;
 
-    setLog('Cargando archivo...');
+    setLog('Lectura de archivo local...');
     setProgress(10);
-    ffmpeg.FS('writeFile', inName, await window._fetchFile(currentFile));
+    
+    // Convertir el archivo usando FileReader local para evitar cierres de CORS
+    const fileData = await fileToUint8Array(currentFile);
+    ffmpeg.FS('writeFile', inName, fileData);
 
     const args = buildFFmpegArgs(inName, outName, fmt);
     setLog(`Ejecutando conversión → ${fmt.toUpperCase()}...`);
     setProgress(30);
 
-    ffmpeg.setLogger(({ message }) => {
-      if (message.includes('time=')) {
-        const m = message.match(/time=(\d+):(\d+):(\d+)/);
-        if (m) {
-          const secs = parseInt(m[1])*3600 + parseInt(m[2])*60 + parseInt(m[3]);
-          setLog(`Procesando: ${m[1]}:${m[2]}:${m[3]}`);
-        }
+    ffmpeg.setProgress(({ ratio }) => {
+      if (ratio && ratio >= 0) {
+        let pct = Math.floor(ratio * 100);
+        if (pct > 95) pct = 95;
+        setProgress(pct);
       }
     });
 
     await ffmpeg.run(...args);
-    setProgress(85);
-    setLog('Finalizando...');
+    setProgress(95);
+    setLog('Generando buffer de salida...');
 
     const data = ffmpeg.FS('readFile', outName);
-    setProgress(100);
 
     const mimeTypes = {
       mp3: 'audio/mpeg', wav: 'audio/wav', flac: 'audio/flac',
@@ -1486,17 +1221,17 @@ async function startConvert() {
     downloadBtn.href = url;
     downloadBtn.download = `${baseName}_miaulement.${ext}`;
 
+    setProgress(100);
+    setLog('¡Proceso completado con éxito!');
     document.getElementById('resultArea').classList.add('visible');
-    document.getElementById('progressArea').classList.remove('visible');
 
-    // Cleanup
+    // Limpieza en memoria FS
     try { ffmpeg.FS('unlink', inName); } catch(e){}
     try { ffmpeg.FS('unlink', outName); } catch(e){}
 
   } catch(err) {
     console.error(err);
-    showError('Error en la conversión: ' + (err.message || err));
-    document.getElementById('progressArea').classList.remove('visible');
+    showError('Error durante la conversión: ' + (err.message || err));
   } finally {
     document.getElementById('convertBtn').disabled = false;
   }
@@ -1517,20 +1252,18 @@ function buildFFmpegArgs(inName, outName, fmt) {
     args.push('-ar', document.getElementById('wavSampleRate').value);
     args.push('-ac', document.getElementById('wavChannels').value);
     const dither = document.getElementById('wavDither').checked;
-    if (dither && (depth === 'pcm_s16le' || depth === 'pcm_s24le' || depth === 'pcm_u8')) {
+    if (dither) {
       const dtype = document.getElementById('wavDitherType').value;
       args.push('-af', `aresample=resampler=soxr:precision=28:dither_method=${dtype}`);
     }
 
   } else if (fmt === 'flac') {
-    const depth = document.getElementById('flacBitDepth').value;
     args.push('-c:a', 'flac');
-    args.push('-sample_fmt', depth === 'pcm_s32le' ? 's32' : depth === 'pcm_s24le' ? 's32' : 's16');
     args.push('-ar', document.getElementById('flacSampleRate').value);
     args.push('-ac', document.getElementById('flacChannels').value);
     args.push('-compression_level', String(selectedFlacComp));
     const dither = document.getElementById('flacDither').checked;
-    if (dither && depth !== 'pcm_s32le') {
+    if (dither) {
       const dtype = document.getElementById('flacDitherType').value;
       args.push('-af', `aresample=resampler=soxr:precision=28:dither_method=${dtype}`);
     }
@@ -1562,7 +1295,7 @@ function buildFFmpegArgs(inName, outName, fmt) {
     args.push('-ac', document.getElementById('aiffChannels').value);
   }
 
-  args.push(outName);
+  args.push('-y', outName);
   return args;
 }
 
