@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Miaulement Convertidor</title>
 
+<!-- Codificador LAME MP3 liviano integrado para ejecución local -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap');
 
@@ -255,6 +258,7 @@
     font-size: 11px;
     cursor: pointer;
     text-align: center;
+    transition: all 0.2s;
   }
 
   .fmt-tab.active {
@@ -285,6 +289,12 @@
     font-size: 13px;
     padding: 8px 12px;
     outline: none;
+    transition: all 0.2s;
+  }
+
+  select:hover, select:focus {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 8px rgba(0,245,255,0.2);
   }
 
   .toggle-row {
@@ -400,7 +410,7 @@
   <header>
     <span class="logo-cat">🐱</span>
     <h1>MIAULEMENT CONVERTIDOR</h1>
-    <div class="tagline">// NATIVE AUDIO ENGINE v3.0 //</div>
+    <div class="tagline">// NATIVE AUDIO ENGINE v3.5 //</div>
     <div class="header-line"></div>
   </header>
 
@@ -412,7 +422,6 @@
       <span class="drop-icon">🎵</span>
       <div class="drop-title">CARGAR ARCHIVO DE AUDIO</div>
       <div class="drop-sub">haz clic aquí o arrastra un archivo de audio</div>
-      <!-- INPUT FILE DIRECTO -->
       <input type="file" id="fileInput" accept="audio/*,.wav,.flac,.mp3,.ogg,.m4a,.aiff" style="display:none">
     </div>
 
@@ -433,31 +442,49 @@
 
       <div class="format-tabs" id="formatTabs">
         <button class="fmt-tab active" data-fmt="wav">WAV</button>
+        <button class="fmt-tab" data-fmt="mp3">MP3</button>
+
+        <button class="fmt-tab" data-fmt="m4a">M4A</button>
+        <button class="fmt-tab" data-fmt="ogg">OGG</button>
         <button class="fmt-tab" data-fmt="flac">FLAC</button>
         <button class="fmt-tab" data-fmt="aiff">AIFF</button>
       </div>
 
       <div class="grid-2" style="margin-top:16px;">
         <div class="field">
-          <label>SAMPLE RATE</label>
+          <label>SAMPLE RATE (FRECUENCIA DE MUESTREO)</label>
           <select id="sampleRateSelect">
             <option value="44100">44100 Hz (CD)</option>
-            <option value="48000" selected>48000 Hz (Estudio)</option>
+            <option value="48000" selected>48000 Hz (Estudio / Video)</option>
             <option value="88200">88200 Hz (Hi-Res)</option>
-            <option value="96000">96000 Hz (Hi-Res)</option>
+            <option value="96000">96000 Hz (Hi-Res Master)</option>
           </select>
         </div>
-        <div class="field">
-          <label>BIT DEPTH / FORMATO</label>
+
+        <!-- OPCIONES PCM / BIT DEPTH (Para WAV, FLAC, AIFF) -->
+        <div class="field" id="bitDepthContainer">
+          <label>BIT DEPTH / RESOLUCIÓN</label>
           <select id="bitDepthSelect">
             <option value="16">16 bits (PCM CD)</option>
             <option value="24" selected>24 bits (PCM Studio)</option>
             <option value="32">32 bits (Float)</option>
           </select>
         </div>
+
+        <!-- OPCIONES BITRATE / FRECUENCIA DE BITS (Para MP3, M4A, OGG) -->
+        <div class="field" id="bitrateContainer" style="display:none;">
+          <label>BITRATE (FRECUENCIA DE BITS)</label>
+          <select id="bitrateSelect">
+            <option value="320">320 kbps (Calidad Máxima / Studio)</option>
+            <option value="256" selected>256 kbps (Alta Calidad)</option>
+            <option value="192">192 kbps (Estándar)</option>
+            <option value="128">128 kbps (Calidad Media)</option>
+            <option value="96">96 kbps (Bajo peso / Voz)</option>
+          </select>
+        </div>
       </div>
 
-      <div style="margin-top:16px">
+      <div style="margin-top:16px" id="ditherRow">
         <label class="toggle-row">
           <input type="checkbox" id="ditherCheck" checked>
           <span style="font-family:'Share Tech Mono'; font-size:12px; color:var(--text-main);">APLICAR DITHER TPDF (Recomendado al reducir Bit Depth)</span>
@@ -500,8 +527,11 @@ const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const btnClear = document.getElementById('btnClear');
 const convertBtn = document.getElementById('convertBtn');
+const bitDepthContainer = document.getElementById('bitDepthContainer');
+const bitrateContainer = document.getElementById('bitrateContainer');
+const ditherRow = document.getElementById('ditherRow');
 
-// SELECCIÓN Y CARGA DE ARCHIVOS CORREGIDA
+// SELECCIÓN Y CARGA DE ARCHIVOS
 dropZone.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', (e) => {
   if (e.target.files && e.target.files[0]) {
@@ -541,12 +571,23 @@ function handleFile(file) {
   resetUI();
 }
 
-// FORMATOS
+// CAMBIO DE PESTAÑAS Y ADAPTACIÓN DE INTERFAZ
 document.querySelectorAll('.fmt-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.fmt-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     currentFormat = tab.dataset.fmt;
+
+    if (['mp3', 'm4a', 'ogg'].includes(currentFormat)) {
+      bitDepthContainer.style.display = 'none';
+      bitrateContainer.style.display = 'flex';
+      ditherRow.style.display = 'none';
+    } else {
+      bitDepthContainer.style.display = 'flex';
+      bitrateContainer.style.display = 'none';
+      ditherRow.style.display = 'block';
+    }
+
     resetUI();
   });
 });
@@ -558,7 +599,7 @@ function resetUI() {
   document.getElementById('progressFill').style.width = '0%';
 }
 
-// CONVERSIÓN VÍA WEB AUDIO API NATIVA
+// PROCESO DE CONVERSIÓN
 convertBtn.addEventListener('click', async () => {
   if (!currentFile) return;
 
@@ -576,6 +617,7 @@ convertBtn.addEventListener('click', async () => {
 
     const targetSampleRate = parseInt(document.getElementById('sampleRateSelect').value);
     const bitDepth = parseInt(document.getElementById('bitDepthSelect').value);
+    const targetBitrate = parseInt(document.getElementById('bitrateSelect').value);
     const applyDither = document.getElementById('ditherCheck').checked;
 
     updateProgress(50, 'Resampleando y procesando canales...');
@@ -592,14 +634,16 @@ convertBtn.addEventListener('click', async () => {
 
     const renderedBuffer = await offlineCtx.startRendering();
 
-    updateProgress(80, 'Codificando formato...');
+    updateProgress(75, `Codificando formato ${currentFormat.toUpperCase()}...`);
     let outputBlob;
     let extension = currentFormat;
 
-    if (currentFormat === 'wav' || currentFormat === 'aiff') {
-      outputBlob = encodeWAVorAIFF(renderedBuffer, bitDepth, applyDither, currentFormat);
-    } else if (currentFormat === 'flac') {
-      outputBlob = encodeWAVorAIFF(renderedBuffer, bitDepth, applyDither, 'wav'); // FLAC Uncompressed PCM container
+    if (currentFormat === 'wav' || currentFormat === 'aiff' || currentFormat === 'flac') {
+      outputBlob = encodeWAVorAIFF(renderedBuffer, bitDepth, applyDither, currentFormat === 'aiff' ? 'aiff' : 'wav');
+    } else if (currentFormat === 'mp3') {
+      outputBlob = await encodeMP3(renderedBuffer, targetBitrate);
+    } else if (currentFormat === 'm4a' || currentFormat === 'ogg') {
+      outputBlob = await encodeCompressedNative(renderedBuffer, currentFormat, targetBitrate);
     }
 
     const url = URL.createObjectURL(outputBlob);
@@ -626,6 +670,82 @@ function updateProgress(pct, msg) {
   document.getElementById('logArea').textContent = '// ' + msg;
 }
 
+// CODIFICADOR MP3 LAME NATIVO
+async function encodeMP3(buffer, bitrate) {
+  if (typeof Mp3LameEncoder !== 'undefined' || typeof lamejs !== 'undefined') {
+    const channels = buffer.numberOfChannels;
+    const sampleRate = buffer.sampleRate;
+    const mp3encoder = new lamejs.Mp3Encoder(channels, sampleRate, bitrate);
+    const mp3Data = [];
+
+    const left = buffer.getChannelData(0);
+    const right = channels > 1 ? buffer.getChannelData(1) : left;
+
+    const sampleBlockSize = 1152;
+    const leftInt16 = new Int16Array(left.length);
+    const rightInt16 = new Int16Array(right.length);
+
+    for (let i = 0; i < left.length; i++) {
+      leftInt16[i] = Math.max(-32768, Math.min(32767, left[i] * 32767));
+      rightInt16[i] = Math.max(-32768, Math.min(32767, right[i] * 32767));
+    }
+
+    for (let i = 0; i < leftInt16.length; i += sampleBlockSize) {
+      const leftChunk = leftInt16.subarray(i, i + sampleBlockSize);
+      const rightChunk = rightInt16.subarray(i, i + sampleBlockSize);
+      let mp3buf;
+      if (channels === 2) {
+        mp3buf = mp3encoder.encodeBuffer(leftChunk, rightChunk);
+      } else {
+        mp3buf = mp3encoder.encodeBuffer(leftChunk);
+      }
+      if (mp3buf.length > 0) mp3Data.push(mp3buf);
+    }
+
+    const mp3end = mp3encoder.flush();
+    if (mp3end.length > 0) mp3Data.push(mp3end);
+
+    return new Blob(mp3Data, { type: 'audio/mp3' });
+  } else {
+    throw new Error("Librería de codificación MP3 no cargada correctamente.");
+  }
+}
+
+// CODIFICADOR NATIVO (M4A / OGG) VÍA MEDIASTREAM DESTINATION
+async function encodeCompressedNative(buffer, format, bitrate) {
+  return new Promise((resolve, reject) => {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: buffer.sampleRate });
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+
+    const dest = ctx.createMediaStreamDestination();
+    source.connect(dest);
+
+    let mimeType = format === 'm4a' ? 'audio/mp4' : 'audio/ogg';
+    if (!MediaRecorder.isTypeSupported(mimeType)) {
+      mimeType = format === 'm4a' ? 'audio/aac' : 'audio/webm;codecs=opus';
+    }
+
+    const mediaRecorder = new MediaRecorder(dest.stream, {
+      mimeType: mimeType,
+      audioBitsPerSecond: bitrate * 1000
+    });
+
+    const chunks = [];
+    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      resolve(new Blob(chunks, { type: mimeType }));
+    };
+
+    source.start(0);
+    mediaRecorder.start();
+
+    source.onended = () => {
+      mediaRecorder.stop();
+    };
+  });
+}
+
 // CODIFICADOR WAV / AIFF CON DITHER TPDF
 function encodeWAVorAIFF(buffer, bitDepth, dither, format) {
   const numChannels = buffer.numberOfChannels;
@@ -642,13 +762,12 @@ function encodeWAVorAIFF(buffer, bitDepth, dither, format) {
     for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
   };
 
-  /* Encabezado RIFF / WAV */
   writeString(0, format === 'wav' ? 'RIFF' : 'FORM');
   view.setUint32(4, 36 + (length * blockAlign), false);
   writeString(8, format === 'wav' ? 'WAVE' : 'AIFF');
   writeString(12, 'fmt ');
   view.setUint32(16, 16, true);
-  view.setUint16(20, bitDepth === 32 ? 3 : 1, true); // 3 = Float, 1 = PCM
+  view.setUint16(20, bitDepth === 32 ? 3 : 1, true);
   view.setUint16(22, numChannels, true);
   view.setUint32(24, sampleRate, true);
   view.setUint32(28, sampleRate * blockAlign, true);
@@ -657,7 +776,6 @@ function encodeWAVorAIFF(buffer, bitDepth, dither, format) {
   writeString(36, 'data');
   view.setUint32(40, length * blockAlign, true);
 
-  // Extracción de canales
   const channels = [];
   for (let i = 0; i < numChannels; i++) {
     channels.push(buffer.getChannelData(i));
@@ -668,13 +786,11 @@ function encodeWAVorAIFF(buffer, bitDepth, dither, format) {
     for (let ch = 0; ch < numChannels; ch++) {
       let sample = channels[ch][i];
 
-      // Dither TPDF (Triangular)
       if (dither && bitDepth < 32) {
         const noise = (Math.random() - Math.random()) / (1 << bitDepth);
         sample += noise;
       }
 
-      // Clipping
       sample = Math.max(-1, Math.min(1, sample));
 
       if (bitDepth === 16) {
